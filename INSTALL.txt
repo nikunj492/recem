@@ -1,0 +1,44 @@
+System requirements
+--------------------
+
+Recem has been tested against Python 2.7 on Linux (Ubuntu 11.10) and the latest
+version of Coopr. Recem should work on all Linux computers but it might take
+effort to get it to run on Windows or Mac OS X.
+
+Installation Prerequisites
+--------------------------
+
+    * Python 2.7:
+      Linux: Python should be available on every Linux/Unix system.
+      Check the version using::
+            python -V
+      Windows: Install Python from this website:
+            http://www.python.org/getit/windows/
+      Macs: Macs come pre-installed with Python but the versions might be old.
+      Install version 2.7 from this website:
+            http://www.python.org/getit/mac/
+
+    * Coopr:
+      Coopr is A COmmon Optimization Python Repository - a collection of
+      open source optimization packages in Python. Install Coopr from this
+      website:
+            https://software.sandia.gov/trac/coopr/wiki/GettingStarted
+      We recommend that you use Options 2-4 (3 for Windows). Options
+      2-4 set up a virtual Python environment which is a local and isolated
+      Python environment that mimics a complete Python installation. We will
+      install Recem in this virtual Python environment.
+
+    * COIN-OR Solvers:
+      COIN-OR is COmputational INfrastructure for Operations
+      Research - an initiative to promote the development of open source
+      software in operations research. We will use the solvers of COIN-OR.
+      Install the solver executables from this website:
+            http://www.coin-or.org/projects/CoinBinary.xml
+      You should obtain the appropriate executables from the 'Download Binaries'
+      link.
+
+Install Recem
+--------------
+
+
+
