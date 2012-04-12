@@ -8,6 +8,5 @@
 # http://www.opensource.org/licenses/bsd-license.php
 #==============================================================================
 
-from energymodel import EnergyModel
-from dice import createDICE2007
-#from dice import *
+from coopr.pyomo import *
+from  EnergyModel import EnergyModel

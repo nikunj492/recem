@@ -8,6 +8,12 @@
 # http://www.opensource.org/licenses/bsd-license.php
 #==============================================================================
 
-from energymodel import EnergyModel
-from dice import createDICE2007
-#from dice import *
+from recem.energymodel import EnergyModel
+from coopr.pyomo import *
+import shutil
+
+TestModel = EnergyModel("Testing!")
+TestModel.build_basic_model()
+shutil.copy("TestData.txt", "TestData.dat")
+instance = TestModel.create('TestData.dat')
+instance.pprint()

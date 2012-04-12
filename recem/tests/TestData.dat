@@ -1,0 +1,91 @@
+#
+# DATA FOR FLATLAND
+#
+
+set PAST :=
+    1990
+    2000
+    2010
+    ;
+
+set HORIZON :=
+    2015
+    2020
+    2030
+    2040
+    ;
+
+
+#set DATATIME :=
+#    1990
+#    2000
+#    2010
+#    2020
+#    2030
+#    ;
+
+set SEASON :=
+    SUMMER
+    INTERMEDIATE      # Monsoon in India, Fall/Spring in the US
+    WINTER
+    ;
+
+set TIMESLICE :=
+    DAY
+    NIGHT;
+
+param TIMESLICESHARE :=
+    SUMMER          DAY     0.1667
+    SUMMER          NIGHT   0.0833
+    INTERMEDIATE    DAY     0.1667
+    INTERMEDIATE    NIGHT   0.1667
+    WINTER          DAY     0.2499
+    WINTER          NIGHT   0.1667
+    ;
+
+set DEMANDTYPES :=      # Note: these are three possible physical types.
+    ELECTRICITY         # GWh
+    HEATING             # PJ/y
+    TRANSPORTATION      # vehicle-km
+    ;
+
+set TECH :=
+    PULVERIZEDCOAL
+    HYDRO
+    NUC
+    WIND
+    SOLARPV
+    GASTURBINE
+    ;
+
+set BASELOAD :=
+    PULVERIZEDCOAL
+    NUC
+    ;
+
+set PEAKING :=
+    HYDRO
+    WIND
+    SOLARPV
+    GASTURBINE
+    ;
+
+set COMMODITY :=
+    COAL
+    GAS
+    OIL
+    URANIUM
+    ELEC
+    CO2
+    ;
+
+set FLOW_IN[PULVERIZEDCOAL]     := COAL;
+set FLOW_IN[NUC]                := URANIUM;
+set FLOW_IN[GASTURBINE]         := GAS OIL;
+
+set FLOW_OUT[PULVERIZEDCOAL]    := CO2 ELEC;
+set FLOW_OUT[GASTURBINE]        := CO2 ELEC;
+set FLOW_OUT[NUC]               := ELEC;
+
+
+param DISCOUNTRATE      := 0.05;
