@@ -1,4 +1,14 @@
-FIXME Copyright (c) 2012, Shoibal Chakravarty [or should it be Princeton University]
+Copyright (c) for DICE: DICE, both DICE1993 and DICE2007 were released
+into the public domain by William Nordhaus, Yale University
+
+[http://nordhaus.econ.yale.edu/]
+
+The version of DICEprovided in this package are released into the 
+public domain with any License whatsoever.
+
+
+Copyright (c) (for everything else): 2012, Princeton University
+Author: Shoibal Chakravarty
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without 

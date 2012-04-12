@@ -6,7 +6,7 @@
 #   domain since the first version of the models were published by
 #   William Nordhaus in 1979.
 #
-#   No license whatsover!! You use this program at your own risk!
+#   You may use this program at your own risk!
 #==============================================================================
 import os
 import sys
@@ -21,6 +21,12 @@ import pyutilib.misc
 
 global start_time
 start_time = time.time()
+
+def printvaluesbyyear(T, R, Name="Emissions (GtC/decade)"):
+    print "period      ",Name
+    for t in T:
+        if t is not T.last():
+            print str(2005+10*(t-1))+"-"+str(2005+10*t),"  ", value(R[t])
 
 
 dice = createDICE2007()
@@ -49,15 +55,13 @@ results = solver_manager.solve(instance,opt=opt,tee=tee, options = options)
 sys.stdout.write('[%8.2f] Solved instance\n' %((time.time()-start_time)))
 
 transformed_results = instance.update_results(results)
-transformed_results.write(filename='OPT.yml')
-sys.stdout.write('[%8.2f] Write results to file.\n' %((time.time()-start_time)))
+#transformed_results.write(filename='OPT.yml')
+#sys.stdout.write('[%8.2f] Write results to file.\n' %((time.time()-start_time)))
 
 instance.load(results)
 print "Emissions: Optimal Scenario"
-display(instance.MIU)
-display(instance.E)
-display(instance.UTIL)
+printvaluesbyyear(T=instance.T, R=instance.E, Name="Emissions (GtC/decade)")
 print ""
 
-sys.stdout.write('[%8.2f] Finished summary.\n' %((time.time()-start_time)))
+sys.stdout.write('[%8.2f] Finished.\n' %((time.time()-start_time)))
 

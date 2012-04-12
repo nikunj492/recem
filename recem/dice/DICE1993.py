@@ -6,7 +6,7 @@
 #   domain since the first version of the models were published by
 #   William Nordhaus in 1979.
 #
-#   No license whatsover!! You use this program at your own risk!
+#   You may use this program at your own risk!
 #==============================================================================
 #
 # This version of DICE1993 is from the The Environmental Economics
@@ -33,8 +33,25 @@ from coopr.pyomo import *
 #
 def createDICE1993(name='DICE1993'):
     """
+     This version of DICE1993 is from 'The Environmental Economics
+     and Natural Resources Group' of Wageningen University
 
+     See the webpage for 'GAMS for environmental modeling' for more:
+        http://www.enr.wur.nl/UK/gams/
+
+    See the DICE website for a complete description of DICE:
+    http://nordhaus.econ.yale.edu/DICE2007.htm
+
+    To create an abstract optimization model of DICE1993  call:
+
+    createDICE1993(name)
+
+    where name can be any string and is used to give the model a short
+    description. The default value is:
+
+    name='DICE1993'
     """
+
     dice = AbstractModel()
     dice.name = 'DICE 93'
 # SETS

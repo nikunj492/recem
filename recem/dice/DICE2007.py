@@ -6,7 +6,7 @@
 #   domain since the first version of the models were published by
 #   William Nordhaus in 1979.
 #
-#   No license whatsover!! You use this program at your own risk!
+#   You may use this program at your own risk!
 #==============================================================================
 #
 #==============================================================================
@@ -63,17 +63,22 @@ def createDICE2007(name='DICE2007', LIMMIU=1, FOSSLIM=6000):
     See the DICE website
     http://nordhaus.econ.yale.edu/DICE2007.htm
 
-    to create an abstract optimization model of DICE2007  call:
+    To create an abstract optimization model of DICE2007  call:
 
     createDICE2007(name, LIMMIU, FOSSLIM)
 
-    where name can be any string, LIMMIU is the upper limit on the
-    fraction of CO2 emission under abatement, and FOSSLIM is the maximum
-    cumulative extraction of fossil fuels (in GtC). The default values are:
+    where name can be any string (used a short description of the model),
+    LIMMIU is the upper limit on the fraction of CO2 emission under abatement,
+    and FOSSLIM is the maximum cumulative extraction of fossil fuels (in GtC).
+    The default values are:
 
-    name='DICE2007'
+    name='DICE2007 Optimal'
     LIMMIU=1
     FOSSLIM=6000
+
+    This version of DICE2007 calculates the Optimum trajectory. Compare with
+    the book: A Question of Balance: Economic Modeling of Global Warming on the
+    DICE website.
     """
 
     if 0 <= LIMMIU <= 1:

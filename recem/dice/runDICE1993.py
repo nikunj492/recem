@@ -6,27 +6,26 @@
 #   domain since the first version of the models were published by
 #   William Nordhaus in 1979.
 #
-#   No license whatsover!! You use this program at your own risk!
+#   You may use this program at your own risk!
 #==============================================================================
-#import gc
-#import logging
+
 import os
 import sys
-#import textwrap
-#import traceback
-#import types
 import time
 
 from coopr.pyomo import *
-from coopr.opt import ProblemFormat
 from coopr.opt.base import SolverFactory
 from coopr.opt.parallel import SolverManagerFactory
-import pyutilib.misc
-#from pyutilib.component.core import ExtensionPoint, Plugin, implements
-#from pyutilib.services import TempfileManager
 
 global start_time
 start_time = time.time()
+
+def printvaluesbyyear(T, R, Name="Emissions (GtC/decade)"):
+    print "period      ",Name
+    for t in T:
+        if t is not T.last():
+            print str(1965+10*(t-1))+"-"+str(1965+10*t),"  ", value(R[t])
+
 
 from recem.dice import createDICE1993
 opt = SolverFactory('ipopt',solver_io='nl')
@@ -59,29 +58,31 @@ dice.MIU.bounds = (0,0)   # fix by setting upper and lower bounds to 0.
 #let BASE := 0;
 dice.BASE.set_value(0)
 
-sys.stdout.write('[%8.2f] create model BASE SCENARIO\n' %(time.time()-start_time))
+print '[%8.2f] create model BASE SCENARIO\n' %(time.time()-start_time)
+
+print """In the base scenario, there is no abatement
+ and hence no abatement costs Moreover, the temperature costs
+ are also assumed to be zero (implemented through BASE=0)."""
 
 inst = dice.create()
-#inst.write(filename='prob.nl',format='nl')
 
-sys.stdout.write('[%8.2f] created instance\n' %(time.time()-start_time))
+print '[%8.2f] created instance\n' %(time.time()-start_time)
 
 results = solver_manager.solve(inst,opt=opt,tee=tee, options = options)
-sys.stdout.write('[%8.2f] Solved instance\n' %((time.time()-start_time)))
+print '[%8.2f] Solved instance\n' %((time.time()-start_time))
 
-#results.write(filename='cbcnl.yml')
 transformed_results = inst.update_results(results)
 #transformed_results.write(filename='BASE.yml')
-sys.stdout.write('[%8.2f] Write results to file.\n' %((time.time()-start_time)))
+#print '[%8.2f] Write results to file.\n' %((time.time()-start_time))
 
 inst.load(results)
 print "Emissions: Base scenario"
 #display(inst.MIU)
-display(inst.E)
+printvaluesbyyear(T=inst.T, R=inst.E, Name="Emissions (GtC/decade)")
 #display(inst.OBJ)
 #display(inst.KK)
 print ""
-sys.stdout.write('[%8.2f] Finished summary.\n' %((time.time()-start_time)))
+#print '[%8.2f] Finished summary.\n' %((time.time()-start_time))
 
 # //////////===== MARKET SCENARIO =====\\\\\\\\\\
 # In this scenario, there are temperature costs (BASE = 1)
@@ -98,29 +99,31 @@ dice.MIU.bounds = (0,0)   # fix by setting upper and lower bounds to 0.
 #let BASE := 1;
 dice.BASE.set_value(1)
 
-sys.stdout.write('[%8.2f] create model MARKET SCENARIO\n' %(time.time()-start_time))
+print '[%8.2f] create model MARKET SCENARIO\n' %(time.time()-start_time)
+print """In this scenario, there are temperature costs (BASE = 1)
+    but as abatement is still fixed at zero, there are no abatement costs.
+    Nordhaus has labelled this scenario 'the market solution'."""
 
 inst = dice.create()
 #inst.write(filename='prob.nl',format='nl')
 
-sys.stdout.write('[%8.2f] created instance\n' %(time.time()-start_time))
+print '[%8.2f] created instance\n' %(time.time()-start_time)
 
 results = solver_manager.solve(inst,opt=opt,tee=tee)
-sys.stdout.write('[%8.2f] Solved instance\n' %((time.time()-start_time)))
+print '[%8.2f] Solved instance\n' %((time.time()-start_time))
 
-#results.write(filename='cbcnl.yml')
 transformed_results = inst.update_results(results)
 #transformed_results.write(filename='MARKET.yml')
-sys.stdout.write('[%8.2f] Write results to file.\n' %((time.time()-start_time)))
+#print '[%8.2f] Write results to file.\n' %((time.time()-start_time))
 
 inst.load(results)
 print "Emissions: Market scenario"
 #display(inst.MIU)
-display(inst.E)
+printvaluesbyyear(T=inst.T, R=inst.E, Name="Emissions (GtC/decade)")
 #display(inst.OBJ)
 #display(inst.KK)
 print ""
-sys.stdout.write('[%8.2f] Finished summary.\n' %((time.time()-start_time)))
+#print '[%8.2f] Finished summary.\n' %((time.time()-start_time))
 
 
 
@@ -156,38 +159,31 @@ dice.BASE.set_value(1)
 
 
 
-sys.stdout.write('[%8.2f] create model OPT_CONT SCENARIO\n' %(time.time()-start_time))
+print '[%8.2f] create model OPT_CONT SCENARIO\n' %(time.time()-start_time)
+print """In this third scenario, the optimal abatement rate is calculated.
+This optimal point is where marginal abatement costs equal marginal temperature costs."""
 
-#ep = ExtensionPoint(IPyomoScriptCreateModelData)
-#if len(ep)==1:
-#    modeldata = ep.service().apply(model=model)
-#else:
-#    modeldata = ModelData()
 
 inst = dice.create()
-#modeldata.read(dice)
-#inst = dice.create(modeldata)
-#inst.write(filename='prob.nl',format='nl')
 
-
-sys.stdout.write('[%8.2f] created instance\n' %(time.time()-start_time))
+print '[%8.2f] created instance\n' %(time.time()-start_time)
 
 results = solver_manager.solve(inst,opt=opt,tee=tee)
-sys.stdout.write('[%8.2f] Solved instance\n' %((time.time()-start_time)))
+print '[%8.2f] Solved instance\n' %((time.time()-start_time))
 
 #results.write(filename='cbcnl.yml')
 transformed_results = inst.update_results(results)
-transformed_results.write(filename='OPT_CONT.yml')
-sys.stdout.write('[%8.2f] Write results to file.\n' %((time.time()-start_time)))
+#transformed_results.write(filename='OPT_CONT.yml')
+#print '[%8.2f] Write results to file.\n' %((time.time()-start_time))
 
 inst.load(results)
-print "Emissions: OTP_CON Scenario"
+print "Emissions: OTP_CONT Scenario"
 #display(inst.MIU)
-display(inst.E)
+printvaluesbyyear(T=inst.T, R=inst.E, Name="Emissions (GtC/decade)")
 #display(inst.OBJ)
 #display(inst.KK)
 print ""
-sys.stdout.write('[%8.2f] Finished summary.\n' %((time.time()-start_time)))
+#print '[%8.2f] Finished summary.\n' %((time.time()-start_time))
 
 
 #//////////===== CONCENT SCENARIO =====\\\\\\\\\\
@@ -209,34 +205,36 @@ dice.BASE.set_value(1)
 #
 dice.M.bounds = (0.0, 1180)
 
-sys.stdout.write('[%8.2f] create model CONCENT SCENARIO\n' %(time.time()-start_time))
+print '[%8.2f] create model CONCENT SCENARIO\n' %(time.time()-start_time)
+print """In the last scenario, an upper bound is placed on CO2 concentrations.
+Note that the abatement rate is still free."""
 
 inst = dice.create()
 #modeldata.read(dice)
 #inst = dice.create(modeldata)
 #inst.write(filename='prob.nl',format='nl')
-sys.stdout.write('[%8.2f] created instance\n' %(time.time()-start_time))
+print '[%8.2f] created instance\n' %(time.time()-start_time)
 
 #outfile = 'dice-pyomo.nl'
 #inst.write(filename=outfile,format='nl')
-#sys.stdout.write('[%8.2f] wrote instance to %s\n' %((time.time()-start_time), outfile))
+#sys.stdout.write('[%8.2f] wrote instance to %s\n' %((time.time()-start_time), outfile)
 
 
 results = solver_manager.solve(inst,opt=opt,tee=tee)
-sys.stdout.write('[%8.2f] Solved instance\n' %((time.time()-start_time)))
+print '[%8.2f] Solved instance\n' %((time.time()-start_time))
 
 #results.write(filename='cbcnl.yml')
 transformed_results = inst.update_results(results)
-transformed_results.write(filename='CONCENT.yml')
-sys.stdout.write('[%8.2f] Write results to file.\n' %((time.time()-start_time)))
+#transformed_results.write(filename='CONCENT.yml')
+#sys.stdout.write('[%8.2f] Write results to file.\n' %((time.time()-start_time)))
 
 inst.load(results)
 print "Emissions: CONCENT Scenario"
 #display(inst.MIU)
-display(inst.E)
+printvaluesbyyear(T=inst.T, R=inst.E, Name="Emissions (GtC/decade)")
 #display(inst.OBJ)
 #display(inst.KK)
 print ""
-sys.stdout.write('[%8.2f] Finished summary.\n' %((time.time()-start_time)))
+sys.stdout.write('[%8.2f] Finished.\n' %((time.time()-start_time)))
 
 
