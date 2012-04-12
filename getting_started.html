@@ -53,6 +53,102 @@
             
   <div class="section" id="installation-instructions">
 <h1>Installation Instructions<a class="headerlink" href="#installation-instructions" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="system-requirements">
+<h2>System requirements<a class="headerlink" href="#system-requirements" title="Permalink to this headline">¶</a></h2>
+<p>Recem [<a class="reference external" href="https://github.com/shoibalc/Recem/">https://github.com/shoibalc/Recem/</a>] has been tested against Python 2.7
+on Linux (Ubuntu 11.10) and the latest
+version of Coopr. Recem should work on all Linux computers but it might take
+some work to get it to run on Windows or Mac OS X.</p>
+</div>
+<div class="section" id="installation-prerequisites">
+<h2>Installation Prerequisites<a class="headerlink" href="#installation-prerequisites" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul>
+<li><p class="first"><strong>Python 2.7</strong>:</p>
+<p>Linux:
+Python should be available on every Linux/Unix system.
+Check the version using:</p>
+<div class="highlight-python"><pre>$ python -V</pre>
+</div>
+<p>Install Python 2.7 from your Linux distribution repository if your
+version is older than that. On Ubuntu or Debian, the following command
+will do:</p>
+<div class="highlight-python"><pre>$ sudo apt-get install python2.7</pre>
+</div>
+<p>Other Linuxes have similar commands: <tt class="docutils literal"><span class="pre">yum</span></tt> instead of <tt class="docutils literal"><span class="pre">apt-get</span></tt> on
+Fedora or RedHat.</p>
+<p>Windows:
+Install Python from this website:</p>
+<blockquote>
+<div><p><a class="reference external" href="http://www.python.org/getit/windows/">http://www.python.org/getit/windows/</a></p>
+</div></blockquote>
+<p>Macs:
+Macs come pre-installed with Python but the versions might be old.
+Install version 2.7 from this website:</p>
+<blockquote>
+<div><p><a class="reference external" href="http://www.python.org/getit/mac/">http://www.python.org/getit/mac/</a></p>
+</div></blockquote>
+</li>
+<li><p class="first"><strong>Coopr</strong>:</p>
+<p>Coopr is A COmmon Optimization Python Repository - a collection of
+open source optimization packages in Python. Install Coopr from this
+website:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://software.sandia.gov/trac/coopr/wiki/GettingStarted">https://software.sandia.gov/trac/coopr/wiki/GettingStarted</a></p>
+</div></blockquote>
+<p>We recommend that you use Options 2-4 (3 for Windows). Options
+2-4 set up a virtual Python environment which is a local and isolated
+Python environment that mimics a complete Python installation. We will
+install Recem in this virtual Python environment. The virtual Python
+environment comes with setuptools and pip - two very handy programs to
+install and manage other Python packages.</p>
+</li>
+<li><p class="first"><strong>COIN-OR Solvers</strong>:</p>
+<p>COIN-OR is COmputational INfrastructure for Operations
+Research - an initiative to promote the development of open source
+software in operations research. We will use the solvers of COIN-OR.
+Install the solver executables from this website:</p>
+<blockquote>
+<div><p><a class="reference external" href="http://www.coin-or.org/projects/CoinBinary.xml">http://www.coin-or.org/projects/CoinBinary.xml</a></p>
+</div></blockquote>
+<p>You should obtain the appropriate executables from the &#8216;Download Binaries&#8217;
+link. Follow instruction their Installation help files to make sure that
+solvers are on your PATH (your operation system should know where to
+find them!).</p>
+</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="install-recem">
+<h2>Install Recem<a class="headerlink" href="#install-recem" title="Permalink to this headline">¶</a></h2>
+<p>We will install using the Python of the virtual Python installation of Coopr.
+Assume that the Python executable of the virtual environment is
+<tt class="docutils literal"><span class="pre">/path/to/coopr/bin/python</span></tt>.</p>
+<p>Your&#8217;s might be different. We assume that you have unzipped and saved the
+Recem  zip file [<a class="reference external" href="https://github.com/shoibalc/Recem/zipball/master">https://github.com/shoibalc/Recem/zipball/master</a>] in the
+directory Recem. In this directory, type the following
+commands:</p>
+<div class="highlight-python"><pre>$ /path/to/coopr/bin/python setup.py develop</pre>
+</div>
+<p>This will install a &#8216;development&#8217; version of Recem. You can make changes,
+uninstall Recem using:</p>
+<div class="highlight-python"><pre>$ /path/to/coopr/bin/python setup.py develop --uninstall</pre>
+</div>
+<p>and reinstall using:</p>
+<div class="highlight-python"><pre>$ /path/to/coopr/bin/python setup.py develop</pre>
+</div>
+<p>To see other options, type:</p>
+<div class="highlight-python"><pre>$ /path/to/coopr/bin/python setup.py -h</pre>
+</div>
+</div>
+<div class="section" id="try-it">
+<h2>Try it<a class="headerlink" href="#try-it" title="Permalink to this headline">¶</a></h2>
+<p>Type the following commands:</p>
+<div class="highlight-python"><pre>$ cd recem/dice
+$ /path/to/coopr/bin/python runDICE1993.py
+$ /path/to/coopr/bin/python runDICE2007.py</pre>
+</div>
+</div>
 </div>
 
 
@@ -61,6 +157,17 @@
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Installation Instructions</a><ul>
+<li><a class="reference internal" href="#system-requirements">System requirements</a></li>
+<li><a class="reference internal" href="#installation-prerequisites">Installation Prerequisites</a></li>
+<li><a class="reference internal" href="#install-recem">Install Recem</a></li>
+<li><a class="reference internal" href="#try-it">Try it</a></li>
+</ul>
+</li>
+</ul>
+
   <h4>Previous topic</h4>
   <p class="topless"><a href="index.html"
                         title="previous chapter">Recem: Repository of Energy, Climate, and Economics Models</a></p>
