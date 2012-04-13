@@ -3,7 +3,7 @@ RECEM: Repository of Energy, Climate and Economics Models
 =========================================================
 
 ---------------------------------------------------------------------
-This package is in the early stages of development - use with caution.
+Version 0.1alpha: This package is in the early stages of development - use with caution.
 ----------------------------------------------------------------------
 
 

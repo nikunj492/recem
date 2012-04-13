@@ -20,7 +20,7 @@ def read(fname):
 
 
 setup(name='Recem',
-      version='0.1',
+      version='0.1alpha',
       maintainer='Shoibal Chakravarty',
       maintainer_email='shoibalc@gmail.com',
       url = 'http://shoibalc.github.com/Recem/',
