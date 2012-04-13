@@ -15,62 +15,69 @@ some work to get it to run on Windows or Mac OS X.
 Installation Prerequisites
 --------------------------
 
-    * **Python 2.7**:
+* **Python 2.7**:
 
-      Linux:
-      Python should be available on every Linux/Unix system.
-      Check the version using::
+  Linux:
+  `Python <http://www.python.org/>`_ is an open source,  high level interpreted
+  language that is very intuitive to learn and easy to program in. Python
+  should be available on every Linux/Unix system.
+  Check the version using::
 
-            $ python -V
+        $ python -V
 
-      Install Python 2.7 from your Linux distribution repository if your
-      version is older than that. On Ubuntu or Debian, the following command
-      will do::
+  Install Python 2.7 from your Linux distribution repository if your
+  version is older than that. On Ubuntu or Debian, the following command
+  will do::
 
-            $ sudo apt-get install python2.7
+        $ sudo apt-get install python2.7
 
-      Other Linuxes have similar commands: ``yum`` instead of ``apt-get`` on
-      Fedora or RedHat.
+  Other Linuxes have similar commands: ``yum`` instead of ``apt-get`` on
+  Fedora or RedHat.
 
-      Windows:
-      Install Python from this website:
+  Windows:
+  Install Python from this website:
 
-            http://www.python.org/getit/windows/
+        http://www.python.org/getit/windows/
 
-      Macs:
-      Macs come pre-installed with Python but the versions might be old.
-      Install version 2.7 from this website:
+  Macs:
+  Macs come pre-installed with Python but the versions might be old.
+  Install version 2.7 from this website:
 
-            http://www.python.org/getit/mac/
+        http://www.python.org/getit/mac/
 
-    * **Coopr**:
+* **Coopr**:
 
-      Coopr is A COmmon Optimization Python Repository - a collection of
-      open source optimization packages in Python. Install Coopr from this
-      website:
+  Coopr is A COmmon Optimization Python Repository - a collection of
+  open source optimization packages in Python. Install Coopr from this
+  website:
 
-            https://software.sandia.gov/trac/coopr/wiki/GettingStarted
+        https://software.sandia.gov/trac/coopr/wiki/GettingStarted
 
-      We recommend that you use Options 2-4 (3 for Windows). Options
-      2-4 set up a virtual Python environment which is a local and isolated
-      Python environment that mimics a complete Python installation. We will
-      install Recem in this virtual Python environment. The virtual Python
-      environment comes with setuptools and pip - two very handy programs to
-      install and manage other Python packages.
+  We recommend that you use Options 2-4 (3 for Windows). Options
+  2-4 set up a virtual Python environment which is a local and isolated
+  Python environment that mimics a complete Python installation. See
 
-    * **COIN-OR Solvers**:
+  http://www.virtualenv.org/
 
-      COIN-OR is COmputational INfrastructure for Operations
-      Research - an initiative to promote the development of open source
-      software in operations research. We will use the solvers of COIN-OR.
-      Install the solver executables from this website:
+  for more on virtual Python installations. We will
+  install Recem in this virtual Python environment. The virtual Python
+  environment comes with setuptools [http://pypi.python.org/pypi/setuptools]
+  and pip [http://www.pip-installer.org] - two very handy programs to
+  install and manage other Python packages.
 
-            http://www.coin-or.org/projects/CoinBinary.xml
+* **COIN-OR Solvers**:
 
-      You should obtain the appropriate executables from the 'Download Binaries'
-      link. Follow instruction their Installation help files to make sure that
-      solvers are on your PATH (your operation system should know where to
-      find them!).
+  COIN-OR is COmputational INfrastructure for Operations
+  Research - an initiative to promote the development of open source
+  software in operations research. We will use the solvers of COIN-OR.
+  Install the solver executables from this website:
+
+        http://www.coin-or.org/projects/CoinBinary.xml
+
+  You should obtain the appropriate executables from the 'Download Binaries'
+  link. Follow instruction their Installation help files to make sure that
+  solvers are on your PATH (your operation system should know where to
+  find them!). We will the solver `Ipopt <www.coin-or.org/Ipopt>`_ for DICE.
 
 Install Recem
 --------------
@@ -90,9 +97,7 @@ uninstall Recem using::
 
      $ /path/to/coopr/bin/python setup.py develop --uninstall
 
-and reinstall using::
-
-     $ /path/to/coopr/bin/python setup.py develop
+and, compile and reinstall it again.
 
 To see other options, type::
 
@@ -106,3 +111,22 @@ Type the following commands::
     $ cd recem/dice
     $ /path/to/coopr/bin/python runDICE1993.py
     $ /path/to/coopr/bin/python runDICE2007.py
+
+
+Development install
+-------------------
+If you want to make the best use of version control you should use **git**. If
+you do not have git you can install it by typing::
+
+        $ sudo apt-get install git
+
+in Debian/Ubuntu Linux. See http://help.github.com/set-up-git-redirect for
+help on setting up git for Mac and Windows. http://gitref.org/ has a quick
+reference.
+
+You can use git to clone Recem into a directory (say Recem)::
+
+        $ git clone git@github.com:shoibalc/Recem.git Recem
+
+The rest of the installation process is the same as the installation from the
+zip file

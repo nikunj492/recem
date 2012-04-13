@@ -8,15 +8,12 @@ Recem: Repository of Energy, Climate, and Economics Models
 ###########################################################
 
 Recem is a repository of data and models for use in the modeling and
-policy making community.
+policy making community. The software repository is
 
-Contents:
+            https://github.com/shoibalc/Recem
 
-.. toctree::
-    :maxdepth: 1
 
-    getting_started
-    todo
+.. _motivation:
 
 ==========
 Motivation
@@ -37,20 +34,40 @@ capacity building in this domain, especially in developing countries. The lack
 of access and openness also obstructs the intellectual process of research.
 Finally, tools that impact policy should be open and transparent in a
 functional democracy. Reproducibility, and independent verification, are
-important elements in the use of these complex tools.
+important elements in the use of these complex models.
 
 An open source development framework is the solution to most of these issues.
 The models, model development process, data and research output should all be
 in the public domain, and run on open source and free software. In principle,
-anybody should be able to modify and run these models on their computer. It is
-also likely to facilitate the  contribution  of experts in  related fields,
+anybody should be able to modify and run these models on their computer. This
+will also facilitate the  contribution  of experts in  related fields,
 and encourage  collaborative research.
 
+Contents:
+=========
+.. toctree::
+    :maxdepth: 1
+
+    intro
+    getting_started
+    todo
+
+
+Status and License
+===================
+Recem currently has two versions of
+`Wiliam Nordhaus <http://nordhaus.econ.yale.edu/>`_'
+DICE integrated assessment model released to the public domain without
+any license restrictions. A bottom-up
+energy systems model of the
+`MARKAL-TIMES <http://www.iea-etsap.org/web/Documentation.asp>`_
+family is currently under development.
+All future releases will be under a permissive
+`BSD License <http://www.opensource.org/licenses/BSD-3-Clause>`_.
 
 ..
     Indices and tables
     ==================
-
     * :ref:`genindex`
     * :ref:`modindex`
     * :ref:`search`

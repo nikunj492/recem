@@ -7,7 +7,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Installation Instructions &mdash; Recem 0.1 documentation</title>
+    <title>Installation Instructions &mdash; Recem 0.1alpha documentation</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.1',
+        VERSION:     '0.1alpha',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,9 +25,9 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="Recem 0.1 documentation" href="index.html" />
-    <link rel="next" title="Coming Soon..." href="todo.html" />
-    <link rel="prev" title="Recem: Repository of Energy, Climate, and Economics Models" href="index.html" /> 
+    <link rel="top" title="Recem 0.1alpha documentation" href="index.html" />
+    <link rel="next" title="Project Contents" href="todo.html" />
+    <link rel="prev" title="Project Design and Development Tools" href="intro.html" /> 
   </head>
   <body>
     <div class="related">
@@ -37,12 +37,12 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="todo.html" title="Coming Soon..."
+          <a href="todo.html" title="Project Contents"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="index.html" title="Recem: Repository of Energy, Climate, and Economics Models"
+          <a href="intro.html" title="Project Design and Development Tools"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">Recem 0.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">Recem 0.1alpha documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -62,11 +62,12 @@ some work to get it to run on Windows or Mac OS X.</p>
 </div>
 <div class="section" id="installation-prerequisites">
 <h2>Installation Prerequisites<a class="headerlink" href="#installation-prerequisites" title="Permalink to this headline">¶</a></h2>
-<blockquote>
-<div><ul>
+<ul>
 <li><p class="first"><strong>Python 2.7</strong>:</p>
 <p>Linux:
-Python should be available on every Linux/Unix system.
+<a class="reference external" href="http://www.python.org/">Python</a> is an open source,  high level interpreted
+language that is very intuitive to learn and easy to program in. Python
+should be available on every Linux/Unix system.
 Check the version using:</p>
 <div class="highlight-python"><pre>$ python -V</pre>
 </div>
@@ -98,9 +99,12 @@ website:</p>
 </div></blockquote>
 <p>We recommend that you use Options 2-4 (3 for Windows). Options
 2-4 set up a virtual Python environment which is a local and isolated
-Python environment that mimics a complete Python installation. We will
+Python environment that mimics a complete Python installation. See</p>
+<p><a class="reference external" href="http://www.virtualenv.org/">http://www.virtualenv.org/</a></p>
+<p>for more on virtual Python installations. We will
 install Recem in this virtual Python environment. The virtual Python
-environment comes with setuptools and pip - two very handy programs to
+environment comes with setuptools [<a class="reference external" href="http://pypi.python.org/pypi/setuptools">http://pypi.python.org/pypi/setuptools</a>]
+and pip [<a class="reference external" href="http://www.pip-installer.org">http://www.pip-installer.org</a>] - two very handy programs to
 install and manage other Python packages.</p>
 </li>
 <li><p class="first"><strong>COIN-OR Solvers</strong>:</p>
@@ -114,10 +118,9 @@ Install the solver executables from this website:</p>
 <p>You should obtain the appropriate executables from the &#8216;Download Binaries&#8217;
 link. Follow instruction their Installation help files to make sure that
 solvers are on your PATH (your operation system should know where to
-find them!).</p>
+find them!). We will the solver <a class="reference external" href="www.coin-or.org/Ipopt">Ipopt</a> for DICE.</p>
 </li>
 </ul>
-</div></blockquote>
 </div>
 <div class="section" id="install-recem">
 <h2>Install Recem<a class="headerlink" href="#install-recem" title="Permalink to this headline">¶</a></h2>
@@ -134,9 +137,7 @@ commands:</p>
 uninstall Recem using:</p>
 <div class="highlight-python"><pre>$ /path/to/coopr/bin/python setup.py develop --uninstall</pre>
 </div>
-<p>and reinstall using:</p>
-<div class="highlight-python"><pre>$ /path/to/coopr/bin/python setup.py develop</pre>
-</div>
+<p>and, compile and reinstall it again.</p>
 <p>To see other options, type:</p>
 <div class="highlight-python"><pre>$ /path/to/coopr/bin/python setup.py -h</pre>
 </div>
@@ -148,6 +149,21 @@ uninstall Recem using:</p>
 $ /path/to/coopr/bin/python runDICE1993.py
 $ /path/to/coopr/bin/python runDICE2007.py</pre>
 </div>
+</div>
+<div class="section" id="development-install">
+<h2>Development install<a class="headerlink" href="#development-install" title="Permalink to this headline">¶</a></h2>
+<p>If you want to make the best use of version control you should use <strong>git</strong>. If
+you do not have git you can install it by typing:</p>
+<div class="highlight-python"><pre>$ sudo apt-get install git</pre>
+</div>
+<p>in Debian/Ubuntu Linux. See <a class="reference external" href="http://help.github.com/set-up-git-redirect">http://help.github.com/set-up-git-redirect</a> for
+help on setting up git for Mac and Windows. <a class="reference external" href="http://gitref.org/">http://gitref.org/</a> has a quick
+reference.</p>
+<p>You can use git to clone Recem into a directory (say Recem):</p>
+<div class="highlight-python"><pre>$ git clone git@github.com:shoibalc/Recem.git Recem</pre>
+</div>
+<p>The rest of the installation process is the same as the installation from the
+zip file</p>
 </div>
 </div>
 
@@ -164,16 +180,17 @@ $ /path/to/coopr/bin/python runDICE2007.py</pre>
 <li><a class="reference internal" href="#installation-prerequisites">Installation Prerequisites</a></li>
 <li><a class="reference internal" href="#install-recem">Install Recem</a></li>
 <li><a class="reference internal" href="#try-it">Try it</a></li>
+<li><a class="reference internal" href="#development-install">Development install</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="index.html"
-                        title="previous chapter">Recem: Repository of Energy, Climate, and Economics Models</a></p>
+  <p class="topless"><a href="intro.html"
+                        title="previous chapter">Project Design and Development Tools</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="todo.html"
-                        title="next chapter">Coming Soon...</a></p>
+                        title="next chapter">Project Contents</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/getting_started.txt"
@@ -203,16 +220,16 @@ $ /path/to/coopr/bin/python runDICE2007.py</pre>
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="todo.html" title="Coming Soon..."
+          <a href="todo.html" title="Project Contents"
              >next</a> |</li>
         <li class="right" >
-          <a href="index.html" title="Recem: Repository of Energy, Climate, and Economics Models"
+          <a href="intro.html" title="Project Design and Development Tools"
              >previous</a> |</li>
-        <li><a href="index.html">Recem 0.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">Recem 0.1alpha documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2012, Shoibal Chakravarty.
+        &copy; Copyright 2012, Princeton University.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
