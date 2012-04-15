@@ -43,6 +43,7 @@ anybody should be able to modify and run these models on their computer. This
 will also facilitate the  contribution  of experts in  related fields,
 and encourage  collaborative research.
 
+=========
 Contents:
 =========
 .. toctree::
@@ -52,9 +53,9 @@ Contents:
     getting_started
     todo
 
-
+==================
 Status and License
-===================
+==================
 Recem currently has two versions of
 `Wiliam Nordhaus <http://nordhaus.econ.yale.edu/>`_'
 DICE integrated assessment model released to the public domain without
