@@ -13,7 +13,7 @@ efficient version control system, to make collaboration easy and painless.
 Anybody can start working on a public project by making a copy [called forking]
 thereby making collaborations easy to start.
 
-The project development will be primarily in `Python <www.python.org>`_.
+The project development will be primarily in `Python <http://www.python.org>`_.
 Python is open source, easy to learn, and comes with a lot of useful
 software libraries, plotting software etc. It has
 become the language of scientific computing with large number of
@@ -21,9 +21,9 @@ projects based on it.
 
 ..   For example,
 ..
-.. * `Scipy <www.scipy.org>`_: A versatile library for scientific and numerical applications.
+.. * `Scipy <http://www.scipy.org>`_: A versatile library for scientific and numerical applications.
 ..
-.. * `Sage <www.sagemath.org>`_: An open source mathematical software system comparable to Mathematica or Matlab.
+.. * `Sage <http://www.sagemath.org>`_: An open source mathematical software system comparable to Mathematica or Matlab.
 
 
 The energy-climate-economics models are usually a class of problems in
@@ -46,7 +46,7 @@ Optimization Python Repository) at Sandia National Laboratories.
 
 There has also been a decade long initiative in the mathematical programming
 and operations research  community to develop open source solvers and other
-optimization tools. These software have been developed under the `COIN-OR <www.coin-or.org/>`_
+optimization tools. These software have been developed under the `COIN-OR <http://www.coin-or.org/>`_
 (COmputational INfrastructure for Operations Research) project. There are a large
 number of these open source solvers that are extremely good, and we will use them
 in our project.
