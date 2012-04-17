@@ -44,7 +44,7 @@ will also facilitate the  contribution  of experts in  related fields,
 and encourage  collaborative research.
 
 =========
-Contents:
+Contents
 =========
 .. toctree::
     :maxdepth: 1
