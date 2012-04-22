@@ -10,5 +10,6 @@
 #==============================================================================
 
 #from coopr.pyomo import *
-from  DICE2007 import createDICE2007
-from  DICE1993 import createDICE1993
+from DICE2007 import createDICE2007
+from DICE1993 import createDICE1993
+from DICEutils import DICE_results_writer

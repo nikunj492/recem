@@ -14,23 +14,35 @@
 # See the webpage for GAMS for environmental modeling:
 #    http://www.enr.wur.nl/UK/gams/
 #
-############################################################################
-# DICE
-# William D. Nordhaus, August 25, 1993
+# NOTE THE DIFFERENCE:
+#   COMMENTED PROGRAM FROM  dice.gms
+# vs.
+#COMMENTS FOR THIS PROGRAM
+# or
+# """
+# COMMENTS OF THIS TYPE
+# """
+#==============================================================================
+#
+#    * DICE
+#    * William D. Nordhaus, August 25, 1993
+#
+#    * Annotated by Rob Dellink
+#    * Note, some changes to the code have been made by Rob Dellink;
+#    * this does NOT affect the parameter values or equations.
+#    * Note: 'abatement' is the same as 'emission control' so 'abatement rate' is 'control rate'.
+#
+#    * Identify four scenarios to be solved (not all reported by Nordhaus)
+#    VERSIONS        /BASE no climate change no abatement,
+#                     MARKET with climate change no abatement,
+#                     OPT_CONT with climate change and abatement,
+#                     CONCENT concentrations below doubling rate/
+#    * A subset 'scenario' is declared, which will contain the active scenario.
+#    * The set element(s) will be identified later.
+#    SCENARIO(VERSIONS)
 
-# Annotated by Rob Dellink
-# Note, some changes to the code have been made by Rob Dellink;
-# this does NOT affect the parameter values or equations.
-# Note: 'abatement' is the same as 'emission control' so 'abatement rate' is 'control rate'.
-
-import sys
-import os
 from coopr.pyomo import *
 
-
-#
-# Setup
-#
 def createDICE1993(name='DICE1993'):
     """
      This version of DICE1993 is from 'The Environmental Economics
@@ -53,219 +65,286 @@ def createDICE1993(name='DICE1993'):
     """
 
     dice = AbstractModel()
-    dice.name = 'DICE 93'
-# SETS
+    dice.name = name
 
-    dice.L0 = Param(initialize=40)                          # L is the number of 10 yr timeperiods
-    dice.L1 = Param(initialize=15)                         # L1: some parameters saturate
-    dice.T = RangeSet(1, dice.L0)
+#    SETS
+#    T               time periods                                    /1*60/
+#    * TF(T) and TL(T) are subsets of T with obvious interpretation.
+#    TF(T)           first period
+#    TL(T)           last period
+# We don't need TF and TL as we handle these using other features of Pyomo and Python.
 
-#SCALAR PARAMETERS
+    dice.L0 = Param(initialize=60, doc='L is the number of 10 yr time periods')
+    dice.L1 = Param(initialize=15, doc='L1: time period when some parameters\
+                    saturate. eg., FORCOTH')
+    dice.T = RangeSet(1, dice.L0, doc='Time Periods')
 
-    dice.BASE = Param(initialize=0)             # dummy for base scenario
-    dice.R = Param(initialize=0.03)                # rate of social time preference per year
-    dice.GL0 = Param(initialize=0.223)              # growth rate of population per year
-    dice.DLAB = Param(initialize=0.195)             # decline rate of population growth per decade
-    dice.DELTAM = Param(initialize=0.0833)           # removal rate carbon per decade
-    dice.GA0 = Param(initialize=0.15)              # initial growth rate for technology per decade
-    dice.DELA = Param(initialize=0.11)             # decline rate of technology growth per decade
-    dice.SIG0 = Param(initialize=0.519)             # CO2EQ-GWP ratio
-    dice.GSIGMA = Param(initialize=-0.1168)           # growth of SIGMA per decade
-    dice.DK = Param(initialize=0.10)               # depreciation rate on capital per year
-    dice.GAMA = Param(initialize=0.25)             # capital elasticity in output
-    #dice.M0 = Param(initialize=)               # CO2EQ concentration 1965 bln tons of carbon
-    dice.M0 = 677                                   # CO2EQ concentration 1965 bln tons of carbon
-    dice.TL0 = Param(initialize=0.10)              # lower stratum temperature (C) 1965
-    dice.T0 = Param(initialize=0.10)               # atmospheric temperature (C) 1965
-    dice.ATRET = Param(initialize=0.64)            # marginal atmospheric retention rate
-    dice.Q0 = Param(initialize=8.519)               # 1965 gross world output tln 1989 US$
-    dice.LL0 = Param(initialize=3369)              # 1965 world population millions
-    dice.K0 = Param(initialize=16.03)               # 1965 value capital billions 1989 US$
-    dice.C1 = Param(initialize=0.226)               # coefficient for upper level
-    dice.LAM = Param(initialize=1.41)              # climate feedback factor
-    dice.C3 = Param(initialize=0.440)               # coefficient trans upper to lower stratum
-    dice.C4 = Param(initialize=0.02)               # coefficient of transfer for lower level
-    dice.A0 = Param(initialize=0.00963)               # initial level of total factor productivity
-    dice.A1 = Param(initialize=0.0133)               # damage coeff for 2xCO2 (fraction GWP)
-    dice.B1 = Param(initialize=0.0686)               # intercept control cost function
-    dice.B2 = Param(initialize=2.887)                  # exponent of control cost function
-    dice.PHIK = Param(initialize=140)                   # transversality coefficient capital
-    dice.PHIM = Param(initialize=-9)                    # transversality coefficient carbon ($ per ton)
-    dice.PHITE = Param(initialize=-7000)                # transversality coeff temp (billion $ per dC)
+#    SCALARS
+#    BASE            dummy for base scenario                         /1.0/
+#    R               rate of social time preference per year         /.03/
+#    GL0             growth rate of population per year              /.223/
+#    DLAB            decline rate of population growth per decade    /.195/
+#    DELTAM          removal rate carbon per decade                  /.0833/
+#    GA0             initial growth rate for technology per decade   /.15/
+#    DELA            decline rate of technology growth per decade    /.11/
+#    SIG0            CO2EQ-GWP ratio                                 /.519/
+#    GSIGMA          growth of SIGMA per decade                      /-.1168/
+#    DK              depreciation rate on capital per year           /.10/
+#    GAMA            capital elasticity in output                    /.25/
+#    M0              CO2EQ concentration 1965 bln tons of carbon     /677/
+#    TL0             lower stratum temperature (C) 1965              /.10/
+#    T0              atmospheric temperature (C) 1965                /.20/
+#    ATRET           marginal atmospheric retention rate             /.64/
+#    Q0              1965 gross world output tln 1989 US$            /8.519/
+#    LL0             1965 world population millions                  /3369/
+#    K0              1965 value capital billions 1989 US$            /16.03/
+#    C1              coefficient for upper level                     /.226/
+#    LAM             climate feedback factor                         /1.41/
+#    C3              coefficient trans upper to lower stratum        /.440/
+#    C4              coefficient of transfer for lower level         /.02/
+#    A0              initial level of total factor productivity      /.00963/
+#    A1              damage coeff for 2xCO2 (fraction GWP)           /0.0133/
+#    B1              intercept control cost function                 /.0686/
+#    B2              exponent of control cost function               /2.887/
+#    PHIK            transversality coefficient capital              /140/
+#    PHIM            transversality coefficient carbon ($ per ton)   /-9/
+#    PHITE           transversality coeff temp (billion $ per dC)    /-7000/
 
+    dice.BASE = Param(initialize=1.0, doc='dummy for base scenario')
+    dice.R = Param(initialize=0.03, doc='rate of social time preference per year')
+    dice.GL0 = Param(initialize=0.223, doc='growth rate of population per year')
+    dice.DLAB = Param(initialize=0.195, doc=' decline rate of population growth per decade')
+    dice.DELTAM = Param(initialize=0.0833, doc='removal rate carbon per decade')
+    dice.GA0 = Param(initialize=0.15, doc='initial growth rate for technology per decade')
+    dice.DELA = Param(initialize=0.11, doc='decline rate of technology growth per decade')
+    dice.SIG0 = Param(initialize=0.519, doc='CO2EQ-GWP ratio')
+    dice.GSIGMA = Param(initialize=-0.1168, doc='growth of SIGMA per decade')
+    dice.DK = Param(initialize=0.10, doc='depreciation rate on capital per year')
+    dice.GAMA = Param(initialize=0.25, doc='capital elasticity in output')
+    dice.M0 = 677 # CO2EQ concentration 1965 bln tons of carbon'
+    dice.TL0 = Param(initialize=0.10, doc='lower stratum temperature (C) 1965')
+    dice.T0 = Param(initialize=0.20, doc='atmospheric temperature (C) 1965')
+    dice.ATRET = Param(initialize=0.64, doc='marginal atmospheric retention rate')
+    dice.Q0 = Param(initialize=8.519, doc='1965 gross world output trillion 1989 US$')
+    dice.LL0 = Param(initialize=3369, doc='1965 world population millions')
+    dice.K0 = Param(initialize=16.03, doc='1965 value capital trillions? 1989 US$')
+    dice.C1 = Param(initialize=0.226, doc='coefficient for upper level')
+    dice.LAM = Param(initialize=1.41, doc='climate feedback factor')
+    dice.C3 = Param(initialize=0.440, doc='coefficient trans upper to lower stratum')
+    dice.C4 = Param(initialize=0.02, doc='coefficient of transfer for lower level')
+    dice.A0 = Param(initialize=0.00963, doc='initial level of total factor productivity')
+    dice.A1 = Param(initialize=0.0133, doc='damage coeff for 2xCO2 (fraction GWP)')
+    dice.B1 = Param(initialize=0.0686, doc='intercept control cost function')
+    dice.B2 = Param(initialize=2.887, doc='exponent of control cost function')
+    dice.PHIK = Param(initialize=140.0, doc='transversality coefficient capital')
+    dice.PHIM = Param(initialize=-9.0, doc='transversality coefficient carbon ($ per ton)')
+    dice.PHITE = Param(initialize=-7000.0, doc='transversality coeff temp (billion $ per dC)')
 
+#    PARAMETERS
+#    Results         Results from the various scenarios
+#    Results2        More results from the various scenarios
+#    Q(T)            level of gross production
+#    L(T)            level of population and labor
+#    AL(T)           level of total factor productivity (TFP)
+#    SIGMA(T)        emissions-output ration
+#    RR(T)           discount factor
+#    GA(T)           growth rate of TFP from 0 to T
+#    FORCOTH(T)      exogenous forcings from other greenhouse gases
+#    GL(T)           growth rate labor 0 to T
+#    GSIG(T)         cumulative improvement of energy efficiency;
+#
+#    * Only the first element in T goes into TF.
+#    TF(T)      = YES$(ORD(T) EQ 1);
+#    * Only the last element in T goes into TL.
+#    TL(T)      = YES$(ORD(T) EQ CARD(T));
+#
+#    DISPLAY TF, TL;
+#
+# We don't need TF and TL as we handle these using other features of Pyomo and Python.
 
-
-# COMPUTED PARAMETERS
-
-# Labour supply in period T grows with rate GL[t]; this is calculated with a specific function:
-# In the first periods, the growth rate increases rapidly but the growth of the growth rate
-# declines over time so that eventually the growth rate stabilises (at around 1.14).
-
-#param GL{t in T}      := (GL0/DLAB)*(1-exp(-DLAB*(t-1)));	#	growth rate labor 0 to T
-#def GL_define(dice, t):
-#    return (dice.GL0.value / dice.DLAB.value) * (1 - exp(-dice.DLAB.value * (dice.T[t] - 1)))
+#    * Labour supply in period T grows with rate GL(T); this is calculated with a specific function:
+#    * In the first periods, the growth rate increases rapidly but the growth of the growth rate
+#    * declines over time so that eventually the growth rate stabilises (at around 1.14).
+#    GL(T)      = (GL0/DLAB)*(1-EXP(-DLAB*(ORD(T)-1)));
     def GL_define(dice, t):
-        express = (dice.GL0 / dice.DLAB) * (1 - exp(-dice.DLAB * (dice.T[t] - 1)))
-        return value(express)
-    dice.GL = Param(dice.T, rule = GL_define)
+        expression = (dice.GL0 / dice.DLAB) * (1 - exp(-dice.DLAB * (t - 1)))
+        return value(expression)
+    dice.GL = Param(dice.T, rule = GL_define, doc="growth rate of labor")
 
-#param L{t in T}       := LL0*exp(GL[t]);       #	level of population and labor
-#def L_define(dice, t):
-#    return dice.LL0.value * exp(dice.GL[t].value)
+#    L(T)       = LL0*EXP(GL(T));
     def L_define(dice, t):
-        express = dice.LL0 * exp(dice.GL[t])
-        return value(express)
-    dice.L = Param(dice.T, rule = L_define)
+        expression = dice.LL0 * exp(dice.GL[t])
+        return value(expression)
+    dice.L = Param(dice.T, rule = L_define, doc="level of population and labor")
 
 
-## The growth rate of technology (total factor productivity) follows a similar function.
-
-#param GA{t in T}      = (GA0/DELA)*(1-exp(-DELA*(t-1)));   #	growth rate of TFP from 0 to T
+#    * The growth rate of technology (total factor productivity) follows a similar function.
+#    GA(T)      = (GA0/DELA)*(1-EXP(-DELA*(ORD(T)-1)));
     def GA_define(dice, t):
-    #    return (dice.GA0.value / dice.DELA.value) * (1 - exp(-dice.DELA.value * (dice.T[t] - 1)))
-        express = (dice.GA0 / dice.DELA) * (1 - exp(-dice.DELA * (dice.T[t] - 1)))
-        return value(express)
-    dice.GA = Param(dice.T, rule = GA_define)
+        expression = (dice.GA0 / dice.DELA) * (1 - exp(-dice.DELA * (t - 1)))
+        return value(expression)
+    dice.GA = Param(dice.T, rule = GA_define, doc="growth rate of TFP from 0 to T")
 
-#param AL{t in T}      = A0*exp(GA[t]);     # level of total factor productivity (TFP)
+#    AL(T)      = A0*EXP(GA(T));
     def AL_define(dice, t):
-        express = dice.A0 * exp(dice.GA[t])
-        return value(express)
-    dice.AL = Param(dice.T, rule = AL_define)
+        expression = dice.A0 * exp(dice.GA[t])
+        return value(expression)
+    dice.AL = Param(dice.T, rule = AL_define, doc="level of total factor productivity (TFP)")
 
-## The growth rate of emission intensity (emissions per unit production) is reversed:
-## GSIGMA is negative, so GSIG is initally high but declines over time.
-
-#param GSIG{t in T}    = (GSIGMA/DELA)*(1-exp(-DELA*(t-1)));	#	cumulative improvement of energy efficiency
+#    * The growth rate of emission intensity (emissions per unit production) is reversed:
+#    * GSIGMA is negative, so GSIG is initally high but declines over time.
+#    GSIG(T)    = (GSIGMA/DELA)*(1-EXP(-DELA*(ORD(T)-1)));
     def GSIG_define(dice, t):
-        express =  (dice.GSIGMA / dice.DELA) * (1 - exp(-dice.DELA * (dice.T[t] - 1)))
-        return value(express)
-    dice.GSIG = Param(dice.T, rule = GSIG_define)
+        expression =  (dice.GSIGMA / dice.DELA) * (1 - exp(-dice.DELA * (t - 1)))
+        return value(expression)
+    dice.GSIG = Param(dice.T, rule = GSIG_define, doc="cumulative improvement of energy efficiency")
 
-#param SIGMA{t in T}   = SIG0*exp(GSIG[t]);         #	emissions-output ration
+#    SIGMA(T)   = SIG0*EXP(GSIG(T));
     def SIGMA_define(dice, t):
-        express = dice.SIG0 * exp(dice.GSIG[t])
-        return value(express)
-    dice.SIGMA = Param(dice.T, rule = SIGMA_define)
+        expression = dice.SIG0 * exp(dice.GSIG[t])
+        return value(expression)
+    dice.SIGMA = Param(dice.T, rule = SIGMA_define, doc="emissions-output ratio")
 
-## As the model uses decades as periods,
-## the discount factor is based on ten times the time preference
+#    * As the model uses decades as periods,
+#    * the discount factor is based on ten times the time preference
+#    RR(T)      = (1+R)**(10*(1-ORD(t)));
+    dice.RR = Param(dice.T, \
+    rule = lambda dice, t: value((1 + dice.R) ** (10 * (1 - t))),\
+    doc="discount factor")
 
-#param RR{t in T}      = (1+R)**(10*(1-t));         #	discount factor
-    dice.RR = Param(dice.T, rule = lambda dice, t: value((1 + dice.R) ** (10 * (1 - dice.T[t]))))
-
-## The influence of other greenhouse gases is exogenous;
-## for the first 15 periods a function depending on time is used; after that the value is fixed.
-
-#param FORCOTH{t in T} =
-#                if t<n_early
-#                    then .2604+.125*t-.0034*t**2dice.
-#                    else 1.42;
+#    * The influence of other greenhouse gasses is exogenous;
+#    * for the first 15 periods a function depending on time is used; after that the value is fixed.
+#    FORCOTH(T) = 1.42;
+#    FORCOTH(T)$(ORD(T) LT 15) = .2604+.125*ORD(T)-.0034*ORD(T)**2;
     def FORCOTH_define(dice, t):
-#    express =  t < dice.L1.value and (0.2604 + 0.125 * dice.T[t] - 0.0034 * dice.T[t] * dice.T[t]) or 1.42
-        return t < value(dice.L1) and (0.2604 + 0.125 * dice.T[t] - 0.0034 * dice.T[t] * dice.T[t]) or 1.42
+        return t < value(dice.L1) and (0.2604 + 0.125 * t - 0.0034 * t * t) or 1.42
     dice.FORCOTH = Param(dice.T, rule = FORCOTH_define)
 
-
-#dice.MIU = Param(dice.T, \
-#		initialize = 0.0)                     # emission control rate GHGs
-
-
-
-#VARIABLES
-
-    dice.MIU = Var(dice.T, bounds = (0.0, 0.999))                     # emission control rate GHGs
-    dice.FORC = Var(dice.T, bounds = (0.0, None))                   # radiative forcing W per m2
-    dice.TE = Var(dice.T, bounds = (0.0, 20.0))                     # temperature atmosphere C
-    dice.TLO = Var(dice.T)                                            # temperature lower ocean C
-    dice.M = Var(dice.T, bounds = (0.0, None), \
-                  initialize = dice.M0)                      # CO2EQ concentration billion ton
-    dice.E = Var(dice.T, bounds = (0.0, 1000), initialize=30)                      # CO2EQ emissions billion ton
-
-    dice.C = Var(dice.T, initialize = 2.0, bounds = (2.0, None))                    # consumption trillion US dollar
-    dice.K = Var(dice.T, bounds = (1.0, None), initialize=10)                    # capital stock trillion US dollar
-    #dice.CPC = Var(dice.T)                                      #per capita consumption thousand US dollar
-    #dice.PCY = Var(dice.T)                                       #per capita income thousand USdollar
-    dice.I = Var(dice.T, bounds = (0.0, None), \
-                  initialize = 1.0)                               #investment trillion US dollar
-    #dice.S = Var(dice.T)                                         #savings rate fraction GDP
-    dice.TRANS = Var()                                           #transversality variable last period
-
-    dice.ABCOSTS = Var(dice.T)                                   #tangible relative costs related to abatement
-    dice.TECOSTS = Var(dice.T)                                   #tangible relative costs related to temp rise
-
-    dice.Y = Var(dice.T, bounds = (0.0, None), \
-                  initialize = 5.0)                                #output
-    dice.UTILPC = Var(dice.T)                                    #utility per capita
-
-# CONSTRAINTS
+#    VARIABLES
+#
+#    MIU(T)          emission control rate GHGs
+#    FORC(T)         radiative forcing W per m2
+#    TE(T)           temperature atmosphere C
+#    TLO(T)          temperature lower ocean C
+#    M(T)            CO2EQ concentration billion ton
+#    E(T)            CO2EQ emissions billion ton
+#    C(T)            consumption trillion US dollar
+#    K(T)            capital stock trillion US dollar
+#    CPC(T)          per capita consumption thousand US dollar
+#    PCY(T)          per capita income thousand US dollar
+#    I(T)            investment trillion US dollar
+#    S(T)            savings rate fraction GDP
+#    TRANS           transversality variable last period
+#    ABCOSTS(T)      tangible relative costs related to abatement
+#    TECOSTS(T)      tangible relative costs related to temp rise
+#    Y(T)            output
+#    UTILPC(T)       utility per capita
+#    UTILITY;
+#
+#    POSITIVE VARIABLES
+#    MIU, E, TE, M, Y, C, K, I;
+#
+#    * Some lower and upper bounds are necessary for GAMS.
+#    K.LO(T)     = 1;
+#    TE.UP(T)    = 20;
+#    M.LO(T)     = 600;
+#    C.LO(T)     = 2;
 
 
-#KK{T}           capital balance
-# Capital stock equals the old capital stock net of ten years of depreciation plus 10 years of (annual) investments.
-#subject to KK{t in T: 1<t<n_periods}:
-#            K[t] <= (1-DK)**10*K[t-1]+10*I[t-1];
+    dice.MIU = Var(dice.T, within=NonNegativeReals, bounds = (0.0, 1.0), doc="emission control rate GHGs")
+    dice.FORC = Var(dice.T, bounds = (0.0, None), doc="radiative forcing W per m2")
+    dice.TE = Var(dice.T, within=NonNegativeReals, initialize = 1.0,  bounds = (0.0, 20.0), doc="temperature atmosphere C")
+    dice.TLO = Var(dice.T, doc="temperature lower ocean C")
+    dice.M = Var(dice.T, within=NonNegativeReals, bounds = (0.0, None), initialize = dice.M0, doc="CO2EQ concentration billion ton")
+    dice.E = Var(dice.T, bounds = (0.0, 1000), initialize=30.0, doc="CO2EQ emissions billion ton")
+    dice.C = Var(dice.T, within=NonNegativeReals, initialize=100.0, bounds = (2.0, None), doc="consumption trillion US dollar")
+    dice.K = Var(dice.T, within=NonNegativeReals, bounds = (1.0, None), initialize=10.0, doc="capital stock trillion US dollar")
+    dice.CPC = Var(dice.T,  doc="per capita consumption thousand US dollar")
+    dice.PCY = Var(dice.T, doc="per capita income thousand US dollar")
+    dice.I = Var(dice.T, within=NonNegativeReals, bounds = (0.0, None), initialize = 1.0, doc="investment trillion US dollar")
+    dice.S = Var(dice.T, initialize = 0.1, doc="savings rate fraction GDP")
+    dice.TRANS = Var(doc="transversality variable last period")
+    dice.ABCOSTS = Var(dice.T, doc="tangible relative costs related to abatement")
+    dice.TECOSTS = Var(dice.T, doc="tangible relative costs related to temp rise")
+    dice.Y = Var(dice.T, initialize = 20.0, within=NonNegativeReals, bounds = (0.0, None), doc="output")
+    dice.UTILPC = Var(dice.T, doc="utility per capita")
 
-#KK0              initial condition of K
-# In the first period, the capital stock is fixed.
-#subject to KK0:
-#            K[1] = K0;
+#    EQUATIONS
+#    UTIL            objective function
+#    PCUTIL(T)       utility per capita
+#    ABCO(T)         tangible relative costs related to abetement
+#    TECO(T)         tangible relative costs related to temperature rise
+#    YY(T)           output
+#    CC(T)           consumption
+#    KK(T)           capital balance
+#    KK0(T)          initial condition of K
+#    KC(T)           terminal condition of K
+#    CPCE(T)         per capita consumption
+#    PCYE(T)         per capita income
+#    EE(T)           emissions process
+#    SEQ(T)          savings rate
+#    FORCE(T)        radiative forcing
+#    MM(T)           CO2 distribution
+#    MM0(T)          initial condition for M
+#    TTE(T)          atmospheric temperature
+#    TTE0(T)         initial condition for atmospheric temperature
+#    TLE(T)          lower oceanic temperature
+#    TLE0(T)         initial condition for lower oceanic temperature
+#    TRANSE(T)       transversality condition;
 
-#KC            terminal condition of K
-# To avoid a zero investments in the last period they are required to be
-# at least equal to the return on existing capital.
-# This so-called transversality condition ensures that in the last period
-# capital grows at the ('normal') steady-state rate.
-#subject to KC:
-#            R*K[n_periods] <= I[n_periods];
+
+#    * Capital stock equals the old capital stock net of ten years of depreciation
+#    * plus 10 years of (annual) investments.
+#    KK(T+1)..    K(T+1)    =L= (1-DK)**10*K(T)+10*I(T);
+#
+#    * In the first period, the capital stock is fixed.
+#    KK0(TF)..    K(TF)     =E= K0;
+#
+#    * To avoid a zero investments in the last period they are required to be
+#    * at least equal to the return on existing capital.
+#    * This so-called transversality condition ensures that in the last period
+#    * capital grows at the ('normal') steady-state rate.
+#    KC(TL)..     R*K(TL)   =L= I(TL);
 
     def KK_define(dice, t):
         if t == 1:
             return (dice.K[t] == dice.K0)
         else:
             return (dice.K[t] <= (1 - dice.DK) ** 10.0 * dice.K[t - 1] + 10 * dice.I[t - 1])
-    dice.KK = Constraint(dice.T, rule = KK_define)
+    dice.KK = Constraint(dice.T, rule = KK_define, doc="capital balance equation with special initial conditions")
 
     def KC_define(dice, t):
-        if t == dice.L0.value:
-            return (dice.R * dice.K[dice.L0.value] <= dice.I[dice.L0.value])
+        if t == value(dice.L0):
+            return (dice.R * dice.K[value(dice.L0)] <= dice.I[value(dice.L0)])
         else:
             return Constraint.Skip
-    dice.KC = Constraint(dice.T, rule = KC_define)
+    dice.KC = Constraint(dice.T, rule = KC_define, doc="transversality condition on capital")
 
-#EE{T}           emissions process
-# Emissions are 10 (years) times emissions per unit of output
-# times (1 minus the abatement rate) times output.
-# For output, the CES production function is used.
-#subject to EE{t in T}:
-#            E[t] >= 10*SIGMA[t]*(1-MIU[t])*AL[t]*L[t]**(1-GAMA)*K[t]**GAMA;
-
+#    * Emissions are 10 (years) times emissions per unit of output
+#    * times (1 minus the abatement rate) times output.
+#    * For output, the CES production function is used.
+#    EE(T)..      E(T)      =G= 10*SIGMA(T)*(1-MIU(T))*AL(T)*L(T)**(1-GAMA)
+#                               *K(T)**GAMA;
     def EE_define(dice, t):
         return (dice.E[t] >= 10.0 * dice.SIGMA[t] * (1 - dice.MIU[t]) \
                 * dice.AL[t] * dice.L[t] ** (1 - dice.GAMA) * dice.K[t] ** dice.GAMA)
-    dice.EE = Constraint(dice.T, rule = EE_define)
+    dice.EE = Constraint(dice.T, rule = EE_define, doc="emissions  process")
 
-#FORCE{T}        radiative forcing
-# Radiative forcings depend on CO2 concentrations and forcings of other greenhouse gases.
-#subject to FORCE{t in T}:
-#            FORC[t] = 4.1*(log(M[t]/590)/log(2))+FORCOTH[t];
+#    * Radiative forcings depend on CO2 concentrations and forcings of other greenhouse gasses.
+#    FORCE(T)..   FORC(T)   =E= 4.1*(LOG(M(T)/590)/LOG(2))+FORCOTH(T);
 
     def FORCE_define(dice, t):
-        return (dice.FORC[t] == 4.1 * (log(dice.M[t] / 590) / log(2.0)) + dice.FORCOTH[t])
-    dice.FORCE = Constraint(dice.T, rule = FORCE_define)
+        return (dice.FORC[t] == 4.1 * (log(dice.M[t] / 590.0) / log(2.0)) + dice.FORCOTH[t])
+    dice.FORCE = Constraint(dice.T, rule = FORCE_define, doc="radiative forcing")
 
 
-#MM0              initial condition for M
-# In the first period, CO2 concentrations are given.
-#subject to MM0:
-#            M[1] = M0;
-#MM{T}           CO2 distribution
-# Similar to the build-up of capital, CO2 concentrations equal
-# previous period concentration net of 'depreciation'
-# plus the portion of emissions that remains in the atmosphere.
-#subject to MM{t in T: t>1}:
-#            M[t] = 590+ATRET*E[t-1]+(1-DELTAM)*(M[t-1]-590);
+#    * In the first period, CO2 concentrations are given.
+#    MM0(TF)..    M(TF)     =E= M0;
+#
+#    * Similar to the build-up of capital, CO2 concentrations equal
+#    * previous period concentration net of 'depreciation'
+#    * plus the portion of emissions that remains in the atmosphere.
+#    MM(T+1)..    M(T+1)    =E= 590+ATRET*E(T)+(1-DELTAM)*(M(T)-590);
 
     def MM_define(dice, t):
         if t == 1:
@@ -273,18 +352,15 @@ def createDICE1993(name='DICE1993'):
         else:
             return (dice.M[t] == 590.0 + dice.ATRET * dice.E[t - 1] \
                     + (1 - dice.DELTAM) * (dice.M[t - 1] - 590.0))
-    dice.MM = Constraint(dice.T, rule = MM_define)
+    dice.MM = Constraint(dice.T, rule = MM_define, doc="CO2 concentration in the atmosphere")
 
-#TTE0            initial condition for atmospheric temperature
-# In the first period, atmospheric temperature is given.
-#subject to TTE0:
-#          TE[1] = T0;
-#TTE{T}          atmospheric temperature
-# Each period, atmospheric temperature increases due to radiative forcing,
-# decreases due to climate feedback and
-# increases (decreases) if atmospheric temperature is lower (higher) than ocean temperature
-#subject to TTE{t in T: t>1}:
-#            TE[t] = TE[t-1]+C1*(FORC[t-1]-LAM*TE[t-1]-C3*(TE[t-1]-TLO[t-1]));
+#    * In the first period, atmospheric temperature is given.
+#    TTE0(TF)..   TE(TF)    =E= T0;
+#
+#    * Each period, atmospheric temperature increases due to radiative forcing,
+#    * decreases due to climate feedback and
+#    * increases (decreases) if atmospheric temperature is lower (higher) than ocean temperature
+#    TTE(T+1)..   TE(T+1)   =E= TE(T)+C1*(FORC(T)-LAM*TE(T)-C3*(TE(T)-TLO(T)));
 
     def TTE_define(dice, t):
         if t == 1:
@@ -292,120 +368,105 @@ def createDICE1993(name='DICE1993'):
         else:
             return(dice.TE[t] == dice.TE[t - 1] + dice.C1 * (dice.FORC[t - 1] \
                 - dice.LAM * dice.TE[t - 1] - dice.C3 * (dice.TE[t - 1] - dice.TLO[t - 1])))
-    dice.TTE = Constraint(dice.T, rule = TTE_define)
+    dice.TTE = Constraint(dice.T, rule = TTE_define, doc="temperature in the atmosphere")
 
-#TLE0            initial condition for lower oceanic temperature
-# In the first period, the temperature of the ocean is given.
-#subject to TLE0:
-#           TLO[1] = TL0;
-#TLE{T}          lower oceanic temperature
-# The temperature difference between the atmosphere and the ocean is the only factor
-# influencing ocean temperature changes.
-#subject to TLE{t in T: t>1}:
-#            TLO[t] = TLO[t-1]+C4*(TE[t-1]-TLO[t-1]);
+#    * In the first period, the temperature of the ocean is given.
+#    TLE0(TF)..   TLO(TF)   =E= TL0;
+#
+#    * The temperature difference between the atmosphere and the ocean is the only factor
+#    * influencing ocean temperature changes.
+#    TLE(T+1)..   TLO(T+1)  =E= TLO(T)+C4*(TE(T)-TLO(T));
 
     def TLE_define(dice, t):
         if t == 1:
             return (dice.TLO[t] == dice.TL0)
         else:
             return(dice.TLO[t] == dice.TLO[t - 1] + dice.C4 * (dice.TE[t - 1] - dice.TLO[t - 1]))
-    dice.TLE = Constraint(dice.T, rule = TLE_define)
+    dice.TLE = Constraint(dice.T, rule = TLE_define, doc="temperature in the ocean")
 
-#ABCO{T}         tangible relative costs related to abetement
-# Abatement costs are an exponential function of the abatement rate MIU
-# The dummy BASE is used to let abatement costs be zero in the base simulation
-#subject to ABCO{t in T}:
-#            ABCOSTS[t] >=  B1*(MIU[t]**B2);
+#    * Abatement costs are an exponential function of the abatement rate MIU
+#    * The dummy BASE is used to let abatement costs be zero in the base simulation
+#    ABCO(T)..    ABCOSTS(T)=G= B1*(MIU(T)**B2);
 
     def ABCO_define(dice, t):
         return (dice.ABCOSTS[t] >= dice.B1 * (dice.MIU[t] ** dice.B2))
-    dice.ABCO = Constraint(dice.T, rule = ABCO_define)
+    dice.ABCO = Constraint(dice.T, rule = ABCO_define, doc="tangible relative costs related to abatement")
 
-#TECO{T}         tangible relative costs related to temperature rise
-# Damage (temperature) costs are a function of atmospheric temperature
-# The dummy BASE is used to let temperature costs be zero in the base simulation
-#subject to TECO{t in T}:
-#            TECOSTS[t] >= BASE*(1-1/(1+(A1/9)*sqrt(TE[t])));
+#    * Damage (temperature) costs are a function of atmospheric temperature
+#    * The dummy BASE is used to let temperature costs be zero in the base simulation
+#    TECO(T)..    TECOSTS(T)=G= BASE*(1-1/(1+(A1/9)*SQR(TE(T))));
 
     def TECO_define(dice, t):
         return (dice.TECOSTS[t] >= dice.BASE * (1 - 1 / (1 + (dice.A1 / 9) * sqrt(dice.TE[t]))))
-    dice.TECO = Constraint(dice.T, rule = TECO_define)
+    dice.TECO = Constraint(dice.T, rule = TECO_define, doc="tangible relative costs related to temperature rise")
 
-#YY{T}           output
-# Available production equals output (the CES production function is used again)
-# minus abatement and temperature costs.
-#subject to YY{t in T}:
-#            Y[t] = AL[t]*L[t]**(1-GAMA)*K[t]**GAMA*(1-ABCOSTS[t])*(1-TECOSTS[t]);
-#            Y[t] = AL[t]*L[t]**(1-GAMA)*K[t]**GAMA;
+#    * Available production equals output (the CES production function is used again)
+#    * minus abatement and temperature costs.
+#    YY(T)..      Y(T)      =E= AL(T)*L(T)**(1-GAMA)*K(T)**GAMA
+#                                    *(1-ABCOSTS(T))*(1-TECOSTS(T));
 
     def YY_define(dice, t):
         return (dice.Y[t] == dice.AL[t] * dice.L[t] ** (1 - dice.GAMA) \
                 * dice.K[t] ** dice.GAMA * (1 - dice.ABCOSTS[t]) * (1 - dice.TECOSTS[t]))
-    dice.YY = Constraint(dice.T, rule = YY_define)
+    dice.YY = Constraint(dice.T, rule = YY_define, doc="output")
 
-#SEQ{T}          savings rate
-# Total savings equal investments, so the savings rate equals investments divided by production.
-# Note that 0.001 is used to prevent the "division by zero" error if Y is zero.
-# This may be the case if no starting values are provided for Y.
-#subject to SEQ{t in T}:
-#            S[t] = I[t]/(.001+Y[t]);
+#    * Total savings equal investments, so the savings rate equals investments divided by production.
+#    * Note that 0.001 is used to prevent the "division by zero" error if Y is zero.
+#    * This may be the case if no starting values are provided for Y.
+#    SEQ(T)..     S(T)      =E= I(T)/(.001+Y(T));
 
+    def SEQ_define(dice, t):
+        return (dice.S[t] == dice.I[t]/(0.001 + dice.Y[t]))
+    dice.SEQ = Constraint(dice.T, rule = SEQ_define, doc="savings rate")
 
-#CC{T}           consumption
-# The standard material balance: Consumption plus investments equal production.
-#subject to CC{t in T}:
-#            C[t] = Y[t]-I[t];
+#    * The standard material balance: Consumption plus investments equal production.
+#    CC(T)..      C(T)      =E= Y(T)-I(T);
 
     def CC_define(dice, t):
         return (dice.C[t] == dice.Y[t] - dice.I[t])
-    dice.CC = Constraint(dice.T, rule = CC_define)
+    dice.CC = Constraint(dice.T, rule = CC_define, doc="consumption")
 
-#CPCE{T}         per capita consumption
-# Consumption per capita is total consumption divided by population;
-# the factor 1000 is used as scaling.
-#subject to CPCE{t in T}:
-#            CPC[t] = C[t]*1000/L[t];
+#    * Consumption per capita is total consumption divided by population;
+#    * the factor 1000 is used as scaling.
+#    CPCE(T)..    CPC(T)    =E= C(T)*1000/L(T);
 
+    def CPCE_define(dice, t):
+        return (dice.CPC[t] == dice.C[t] * 1000 / dice.L[t])
+    dice.CPCE = Constraint(dice.T, rule = CPCE_define, doc="per capita consumption")
 
-#PCYE{T}         per capita income
-# Similarly, per capita production can be calculated.
-#subject to PCYE{t in T}:
-#            PCY[t] = Y[t]*1000/L[t];
+#    * Similarly, per capita production can be calculated.
+#    PCYE(T)..    PCY(T)    =E= Y(T)*1000/L(T);
 
+    def PCYE_define(dice, t):
+        return (dice.PCY[t] == dice.Y[t] * 1000 / dice.L[t])
+    dice.PCYE = Constraint(dice.T, rule = PCYE_define, doc="per capita production")
 
-#TRANSE{T}       transversality condition;
-# There will be utility derived from consumption after the model horizon.
-# The parameters determining 'after-horizon-utility are calculated outside the model.
-# Last period values are used to calculate utulity in the periods after the horizon.
-#subject to TRANSE:
-#            TRANS = RR[n_periods]*(PHIK*K[n_periods]+PHIM*M[n_periods]
-#                +PHITE*TE[n_periods]);
+#    * There will be utility derived from consumption after the model horizon.
+#    * The parameters determining 'after-horizon-utility are calculated outside the model.
+#    * Last period values are used to calculate utility in the periods after the horizon.
+#    TRANSE(TL).. TRANS     =E= RR(TL)*(PHIK*K(TL)+PHIM*M(TL)+PHITE*TE(TL));
 
     def TRANSE_define(dice):
-        return (dice.TRANS == dice.RR[dice.L0.value] * (dice.PHIK * dice.K[dice.L0.value] \
-                        + dice.PHIM * dice.M[dice.L0.value]))
-    dice.TRANSE = Constraint(rule = TRANSE_define)
+        return (dice.TRANS == dice.RR[value(dice.L0)] * (dice.PHIK * dice.K[value(dice.L0)] \
+                + dice.PHIM * dice.M[value(dice.L0)] + dice.PHITE * dice.TE[value(dice.L0)]))
+    dice.TRANSE = Constraint(rule = TRANSE_define, doc="transversality condition")
 
-#PCUTIL{T}       utility per capita
-# The utility in period T is the log of per capita consumption in that period.
-# This is a quite common utility function.
-#subject to PCUTIL{t in T}:
-#            UTILPC[t] <= log(C[t]/L[t])/.55;
+#    * The utility in period T is the log of per capita consumption in that period.
+#    * This is a quite common utility function.
+#    PCUTIL(T)..  UTILPC(T) =L= LOG(C(T)/L(T))/.55;
 
     def PCUTIL_define(dice, t):
         return (dice.UTILPC[t] <= log(dice.C[t] / dice.L[t]) / 0.55)
-    dice.PCUTIL = Constraint(dice.T, rule = PCUTIL_define)
+    dice.PCUTIL = Constraint(dice.T, rule = PCUTIL_define, doc="per capita utility")
+#
+#    * Total present value utility is the sum of all future per capita utility levels
+#    * times the population, times the discount factor times ten years per period,
+#    * plus the after-horizon-utility.
+#    UTIL..       UTILITY   =E= SUM(T, 10*RR(T)*L(T)*UTILPC(T))+TRANS;
 
-#OBJECTIVE            objective function
-# Total present value utility is the sum of all future per capita utility levels
-# times the population, times the discount factor times ten years per period,
-# plus the after-horizon-utility.
-#maximize OBJECTIVE:
-#            TRANS + sum{ t in T} 10*RR[t]*L[t]*UTILPC[t];
-
-    def OBJ_define(dice):
-        return (dice.TRANS + sum(10.0 * dice.RR[t] * dice.L[t].value * dice.UTILPC[t] for t in dice.T))
-    dice.OBJ = Objective(rule = OBJ_define, sense = maximize)
+    def UTIL_define(dice):
+        return (dice.TRANS + sum(10.0 * dice.RR[t] * dice.L[t] * dice.UTILPC[t] for t in dice.T))
+    dice.UTIL = Objective(rule = UTIL_define, sense = maximize, doc="Objective function: total present value utility")
 
 # Note that there is no equation to determine the optimal value of MIU(T).
 # This variable is determined endogenously by GAMS(AMPL) as a 'free variable'.

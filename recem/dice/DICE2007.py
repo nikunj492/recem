@@ -55,7 +55,7 @@ translated by Pyomo to an instance file (another special data format file) and
 sent to specialized solver programs like GLPK, CBC, IPOPT. The solution is
 read by Pyomo and reported in human readable format.
 """
-def createDICE2007(name='DICE2007', LIMMIU=1, FOSSLIM=6000):
+def createDICE2007(name='DICE2007', LIMMIU=1.0, FOSSLIM=6000.0):
     """
     This is a translation of the GAMS version of  William Nordhaus's DICE:
     http://nordhaus.econ.yale.edu/DICE2007_short.gms
@@ -124,16 +124,16 @@ def createDICE2007(name='DICE2007', LIMMIU=1, FOSSLIM=6000):
 #     Q0       2005 world gross output trill 2005 US dollars   /61.1     /
 #     K0       2005 value capital trill 2005 US dollars        /137.     /
 
-    M.POP0 = Param(initialize = 6514, doc = '2005 world population millions')
+    M.POP0 = Param(initialize = 6514.0, doc = '2005 world population millions')
     M.GPOP0 = Param(initialize = 0.35, doc = 'Growth rate of population per decade')
-    M.POPASYM = Param(initialize = 8600, doc = 'Asymptotic population')
+    M.POPASYM = Param(initialize = 8600.0, doc = 'Asymptotic population')
     M.A0 = Param(initialize = 0.02722, doc = 'Initial level of total factor productivity')
     M.GA0 = Param(initialize = 0.092, doc = 'Initial growth rate for technology per decade')
     M.DELA = Param(initialize = 0.001, doc = 'Decline rate of technol change per decade')
     M.DK = Param(initialize = 0.1, doc = 'Depreciation rate on capital per year')
     M.GAMA = Param(initialize = 0.3, doc = 'Capital elasticity in production function')
     M.Q0 = Param(initialize = 61.1, doc = '2005 world gross output trill 2005 US dollars')
-    M.K0 = Param(initialize = 137, doc = '2005 value capital trill 2005 US dollars')
+    M.K0 = Param(initialize = 137.0, doc = '2005 value capital trill 2005 US dollars')
 
 
 #    ** Emissions
@@ -163,8 +163,8 @@ def createDICE2007(name='DICE2007', LIMMIU=1, FOSSLIM=6000):
 #     b33      Carbon cycle transition matrix                  /0.996881 /
 
     M.MAT2000 = Param(initialize = 808.9, doc = 'Concentration in atmosphere 2005 (GtC)')
-    M.MU2000 = Param(initialize = 1255, doc = 'Concentration in upper strata 2005 (GtC)')
-    M.ML2000 = Param(initialize = 18365, doc = 'Concentration in lower strata 2005 (GtC)')
+    M.MU2000 = Param(initialize = 1255.0, doc = 'Concentration in upper strata 2005 (GtC)')
+    M.ML2000 = Param(initialize = 18365.0, doc = 'Concentration in lower strata 2005 (GtC)')
     M.B11 = Param(initialize = 0.810712, doc = 'Carbon cycle transition matrix')
     M.B12 = Param(initialize = 0.189288, doc = 'Carbon cycle transition matrix')
     M.B21 = Param(initialize = 0.097213, doc = 'Carbon cycle transition matrix')
@@ -185,7 +185,7 @@ def createDICE2007(name='DICE2007', LIMMIU=1, FOSSLIM=6000):
 #     C4       Transfer coeffic for lower level                /.050    /
 #     FCO22X   Estimated forcings of equilibrium co2 doubling  /3.8     /
 
-    M.T2XCO2 = Param(initialize = 3, doc = 'Equilibrium temp impact of CO2 doubling oC')
+    M.T2XCO2 = Param(initialize = 3.0, doc = 'Equilibrium temp impact of CO2 doubling oC')
     M.FEX0 = Param(initialize = -0.06, doc = 'Estimate of 2000 forcings of non-CO2 GHG')
     M.FEX1 = Param(initialize = 0.3, doc = 'Estimate of 2100 forcings of non-CO2 GHG')
     M.TOCEAN0 = Param(initialize = 0.0068, doc = '2000 lower strat. temp change (C) from 1900')
@@ -201,9 +201,9 @@ def createDICE2007(name='DICE2007', LIMMIU=1, FOSSLIM=6000):
 #    A2       Damage quadratic term                           /  0.0028388 /
 #     A3       Damage exponent                                 / 2.00       /
 
-    M.A1 = Param(initialize = 0, doc = 'Damage intercept')
+    M.A1 = Param(initialize = 0.0, doc = 'Damage intercept')
     M.A2 = Param(initialize = 0.0028388, doc = 'Damage quadratic term')
-    M.A3 = Param(initialize = 2, doc = 'Damage exponent')
+    M.A3 = Param(initialize = 2.0, doc = 'Damage exponent')
 
 
 #    ** Abatement cost
@@ -215,9 +215,10 @@ def createDICE2007(name='DICE2007', LIMMIU=1, FOSSLIM=6000):
 
     M.EXPCOST2 = Param(initialize = 2.8, doc = 'Exponent of control cost function')
     M.PBACK = Param(initialize = 1.17, doc = 'Cost of backstop 2005 000$ per tC 2005')
-    M.BACKRAT = Param(initialize = 2, doc = 'Ratio initial to final backstop cost')
+    M.BACKRAT = Param(initialize = 2.0, doc = 'Ratio initial to final backstop cost')
     M.GBACK = Param(initialize = 0.05, doc = 'Initial cost decline backstop pc per decade')
-    M.LIMMIU = LIMMIU # ANOTHER PYTHON PYOMO HACK
+    M.LIMMIU = LIMMIU # ANOTHER PYTHON PYOMO HACK (WE READ/INITIALIZE THIS PARAM WHEN
+#                       WE CALL THIS FUNCTION TO CREATE A DICE2007 MODEL)
 
 
 #    ** Participation
@@ -233,10 +234,10 @@ def createDICE2007(name='DICE2007', LIMMIU=1, FOSSLIM=6000):
 #      scale1 Scaling coefficient in the objective function       /194    /
 #      scale2 Scaling coefficient in the objective function       /381800 / ;
 
-    M.PARTFRACT1 = Param(initialize = 0.25372, doc = 'Fraction of emissions under control regime 2005')
-    M.PARTFRACT2 = Param(initialize = 1, doc = 'Fraction of emissions under control regime 2015')
-    M.PARTFRACT21 = Param(initialize = 1, doc = 'Fraction of emissions under control regime 2205')
-    M.DPARTFRACT = Param(initialize = 0, doc = 'Decline rate of participation')
+    M.PARTFRACT1 = Param(initialize = 1.0, doc = 'Fraction of emissions under control regime 2005')
+    M.PARTFRACT2 = Param(initialize = 1.0, doc = 'Fraction of emissions under control regime 2015')
+    M.PARTFRACT21 = Param(initialize = 1.0, doc = 'Fraction of emissions under control regime 2205')
+    M.DPARTFRACT = Param(initialize = 0.0, doc = 'Decline rate of participation')
 
     M.FOSSLIM = FOSSLIM # ANOTHER PYTHON PYOMO HACK
 
@@ -250,7 +251,7 @@ def createDICE2007(name='DICE2007', LIMMIU=1, FOSSLIM=6000):
 #          TEARLY(T)
 #          TLATE(T);
 
-#NOTE: We don't need the above SETS as we handle these differently below.
+#NOTE: We don't use the above SETS in the OPTIMUM CASE.
 
 
 #      AA1           Variable A1
@@ -270,11 +271,11 @@ def createDICE2007(name='DICE2007', LIMMIU=1, FOSSLIM=6000):
 #    ELASMU = B_ELASMU;
 #    PRSTP  = B_PRSTP;
 
-    M.AA1 = Param(rule = lambda M: M.A1.value, doc = 'Variable A1')
-    M.AA2 = Param(rule = lambda M: M.A2.value, doc = 'Variable A2')
-    M.AA3 = Param(rule = lambda M: M.A3.value, doc = 'Variable A3')
-    M.ELASMU = Param(rule = lambda M: M.B_ELASMU.value, doc = 'Variable elasticity of marginal utility of consumption')
-    M.PRSTP = Param(rule = lambda M: M.B_PRSTP.value, doc = 'Variable initial rate of social time preference per year')
+    M.AA1 = Param(rule = lambda M: value(M.A1), doc = 'Variable A1')
+    M.AA2 = Param(rule = lambda M: value(M.A2), doc = 'Variable A2')
+    M.AA3 = Param(rule = lambda M: value(M.A3), doc = 'Variable A3')
+    M.ELASMU = Param(rule = lambda M: value(M.B_ELASMU), doc = 'Variable elasticity of marginal utility of consumption')
+    M.PRSTP = Param(rule = lambda M: value(M.B_PRSTP), doc = 'Variable initial rate of social time preference per year')
 
 
 
@@ -285,7 +286,11 @@ def createDICE2007(name='DICE2007', LIMMIU=1, FOSSLIM=6000):
 #    M.B32 = 1143.894*M.B23/18340;
 #    M.B33 = 1 - M.B32 ;
 
-#This is a repeat of data stated above. We do not need this.
+    M.B11 = Param(rule = lambda M: 1 - value(M.B12), doc = 'Carbon cycle transition matrix')
+    M.B21 = Param(rule = lambda M: 587.473*value(M.B12)/1143.894, doc = 'Carbon cycle transition matrix')
+    M.B22 = Param(rule = lambda M: 1 - value(M.B21) - value(M.B23), doc = 'Carbon cycle transition matrix')
+    M.B32 = Param(rule = lambda M: 1143.894*value(M.B23)/18340, doc = 'Carbon cycle transition matrix')
+    M.B33 = Param(rule = lambda M: 1 - value(M.B32), doc = 'Carbon cycle transition matrix')
 
 
 
@@ -313,79 +318,88 @@ def createDICE2007(name='DICE2007', LIMMIU=1, FOSSLIM=6000):
 
 #   * Important parameters for the model
 
-    M.LAM = Param(rule = lambda M: M.FCO22X.value/M.T2XCO2.value, doc = 'Climate model parameter')
+#   LAM     = FCO22X/ T2XCO2;
+    M.LAM = Param(rule = lambda M: value(M.FCO22X)/value(M.T2XCO2), doc = 'Climate model parameter')
 
 #   GFACPOP(T) =   (exp(GPOP0*(ORD(T)-1))-1)/exp(GPOP0*(ORD(T)-1));
     def GFACPOP_rule(M, t):
-        GPOP0 = M.GPOP0.value
-        return ((exp(GPOP0*(t-1)) -1)/exp(GPOP0*(t-1)))
+        paramvalue = (exp(M.GPOP0*(t-1)) -1)/exp(M.GPOP0*(t-1))
+        return value(paramvalue)
     M.GFACPOP = Param(M.T, rule = GFACPOP_rule, doc = 'Growth factor population')
 
 #   L(T)=POP0* (1- GFACPOP(T))+GFACPOP(T)*POPASYM;
     def L_rule(M, t):
-        return(M.POP0.value*(1 - M.GFACPOP[t].value) + M.GFACPOP[t].value*M.POPASYM.value)
+        paramvalue = M.POP0 * (1 - M.GFACPOP[t]) + M.GFACPOP[t] * M.POPASYM
+        return value(paramvalue)
     M.L = Param(M.T, rule = L_rule, doc = 'Level of population and labor')
 
 #   GA(T)=GA0*EXP(-DELA*10*(ORD(T)-1));
     def GA_rule(M, t):
-        return (M.GA0.value*exp(-M.DELA.value*10*(t - 1)))
+        paramvalue = M.GA0 * exp(- M.DELA * 10 *(t - 1))
+        return value(paramvalue)
     M.GA = Param(M.T, rule = GA_rule, doc = 'Growth rate of productivity from 0 to T')
 
 #   AL("1") = A0;
 #   LOOP(T, AL(T+1)=AL(T)/((1-GA(T))););
     def AL_rule(M, t):
         if t == 1:
-            return M.A0.value
+            return value(M.A0)
         else:
-            return M.AL[t-1].value/(1 - M.GA[t-1].value)
+            return value(M.AL[t-1])/(1 - value(M.GA[t-1]))
     M.AL = Param(M.T, rule = AL_rule, doc = 'Level of total factor productivity')
 
 
 #   GSIG(T)=GSIGMA*EXP(-DSIG*10*(ORD(T)-1)-DSIG2*10*((ORD(T)-1)**2));
     def GSIG_rule(M, t):
-        return (M.GSIGMA.value*exp(-M.DSIG.value*10*(t-1) - M.DSIG2.value*10*(t-1)**2))
+        paramvalue = M.GSIGMA*exp(-M.DSIG*10*(t-1) - M.DSIG2*10*(t-1)**2)
+        return value(paramvalue)
     M.GSIG = Param(M.T, rule = GSIG_rule, doc = 'Cumulative improvement of energy efficiency')
 
 #   SIGMA("1")=SIG0;
 #   LOOP(T,SIGMA(T+1)=(SIGMA(T)/((1-GSIG(T+1)))););
     def SIGMA_rule(M,t):
         if t == 1:
-            return M.SIG0.value
+            return value(M.SIG0)
         else:
-            return M.SIGMA[t-1].value/(1 - M.GSIG[t].value)
+            return value(M.SIGMA[t-1])/(1 - value(M.GSIG[t]))
     M.SIGMA = Param(M.T, rule = SIGMA_rule, doc = 'CO2-equivalent-emissions output ratio')
 
 
 #   COST1(T) = (PBACK*SIGMA(T)/EXPCOST2)* ( (BACKRAT-1+ EXP (-GBACK* (ORD(T)-1) ) )/BACKRAT);
     def COST1_rule(M, t):
-        return ((M.PBACK.value*M.SIGMA[t].value/M.EXPCOST2.value)*((M.BACKRAT.value - 1 + exp(-M.GBACK.value*(t-1)))/M.BACKRAT.value))
+        paramvalue = (M.PBACK*M.SIGMA[t]/M.EXPCOST2)*((M.BACKRAT - 1 + exp(-M.GBACK*(t-1)))/M.BACKRAT)
+        return value(paramvalue)
     M.COST1 = Param(M.T, rule = COST1_rule, doc = 'Adjusted cost for backstop')
 
 #   ETREE(T) = ELAND0*(1-0.1)**(ORD(T)-1);
     def ETREE_rule(M, t):
-        return M.ELAND0.value*(1 - 0.1)**(t-1)
+        return value(M.ELAND0)*(1 - 0.1)**(t-1)
     M.ETREE = Param(M.T, rule = ETREE_rule, doc = 'Emissions from deforestation')
 
 #   RR(T)=1/((1+PRSTP)**(10*(ORD(T)-1)));
     def RR_rule(M, t):
-        return (1 + M.PRSTP.value)**(10*(1 - t))
+        return (1 + value(M.PRSTP))**(10*(1 - t))
     M.RR = Param(M.T, rule = RR_rule, doc = 'Average utility social discount rate')
 
 #   FORCOTH(T)= FEX0+ .1*(FEX1-FEX0)*(ORD(T)-1)$(ORD(T) LT 12)+ 0.36$(ORD(T) GE 12);
     def FORCOTH_rule(M, t):
-        return (t < M.L1.value  and (M.FEX0.value + 0.1*(M.FEX1.value - M.FEX0.value)*(t-1)) or (M.FEX0.value + 0.36))
+        return (t < value(M.L1)  and (value(M.FEX0) + 0.1*(value(M.FEX1) - value(M.FEX0))*(t-1)) or (value(M.FEX0) + 0.36))
     M.FORCOTH = Param(M.T, rule = FORCOTH_rule, doc = 'Exogenous forcing for other greenhouse gases')
 
 #   PARTFRACT(T) = PARTFRACT21;
 #   PARTFRACT(T)$(ORD(T)<25) = PARTFRACT21 + (PARTFRACT2-PARTFRACT21)*EXP(-DPARTFRACT*(ORD(T)-2));
 #   PARTFRACT("1")= PARTFRACT1;
+#   PARTFRACT("1")= 0.25372;
     def PARTFRACT_rule(M, t):
-        if t ==1:
-            return M.PARTFRACT1.value
-        elif 1 < t < M.L2.value:
-            return M.PARTFRACT21.value + (M.PARTFRACT2.value - M.PARTFRACT21.value)*exp(-M.DPARTFRACT.value*(t-2))
+        if t==1:
+#            return value(M.PARTFRACT1)
+            return 0.25372
+        elif 1 < t < value(M.L2):
+#            return value(M.PARTFRACT21) + (value(M.PARTFRACT2) - value(M.PARTFRACT21))*exp(-value(M.DPARTFRACT)*(t-2))
+            paramvalue = M.PARTFRACT21 + (M.PARTFRACT2 - M.PARTFRACT21)*exp(-M.DPARTFRACT*(t-2))
+            return value(paramvalue)
         else:
-            return M.PARTFRACT21.value
+            return value(M.PARTFRACT21)
     M.PARTFRACT = Param(M.T, rule = PARTFRACT_rule, doc = 'Fraction of emissions in control regime')
 
 
@@ -419,15 +433,15 @@ def createDICE2007(name='DICE2007', LIMMIU=1, FOSSLIM=6000):
 
     M.MIU = Var(M.T, within = NonNegativeReals, bounds = (0.0, M.LIMMIU), doc = 'Emission control rate GHGs')
     M.FORC = Var(M.T, doc = 'Radiative forcing in watts per m2')
-    M.TATM = Var(M.T, within = NonNegativeReals, doc = 'Temperature of atmosphere in degrees C')
-    M.TOCEAN = Var(M.T, within = NonNegativeReals, doc = 'Temperature of lower oceans degrees C')
+    M.TATM = Var(M.T, initialize = 0, within = NonNegativeReals, doc = 'Temperature of atmosphere in degrees C')
+    M.TOCEAN = Var(M.T, initialize = 0, within = NonNegativeReals, doc = 'Temperature of lower oceans degrees C')
     M.MAT = Var(M.T, within = NonNegativeReals, doc = 'Carbon concentration in atmosphere GtC')
     M.MATAV = Var(M.T, within = NonNegativeReals, doc = 'Average concentrations')
     M.MU = Var(M.T, within = NonNegativeReals, doc = 'Carbon concentration in shallow oceans Gtc')
     M.ML = Var(M.T, within = NonNegativeReals, doc = 'Carbon concentration in lower oceans GtC')
     M.E = Var(M.T, within = NonNegativeReals, doc = 'CO2-equivalent emissions GtC')
-    M.C = Var(M.T, initialize = 2, within = NonNegativeReals, doc = 'Consumption trillions US dollars')
-    M.K = Var(M.T, initialize = 10, within = NonNegativeReals, doc = 'Capital stock trillions US dollars')
+    M.C = Var(M.T, initialize = 20, within = NonNegativeReals, doc = 'Consumption trillions US dollars')
+    M.K = Var(M.T, initialize = 100, within = NonNegativeReals, doc = 'Capital stock trillions US dollars')
     M.CPC = Var(M.T, doc = 'Per capita consumption thousands US dollars')
     M.PCY = Var(M.T, doc = 'Per capita income thousands US dollars')
     M.I = Var(M.T, within = NonNegativeReals, doc = 'Investment trillions US dollars')
@@ -440,7 +454,6 @@ def createDICE2007(name='DICE2007', LIMMIU=1, FOSSLIM=6000):
     M.ABATECOST = Var(M.T, doc = 'Cost of emissions reductions')
     M.CCA = Var(M.T, within = NonNegativeReals, doc = 'Cumulative industrial carbon emissions GTC')
     M.PERIODU = Var(M.T, doc = 'One period utility function')
-    M.UTILITY = Var(M.T, doc = 'Total utility')
 
 
 
@@ -464,7 +477,7 @@ def createDICE2007(name='DICE2007', LIMMIU=1, FOSSLIM=6000):
 #   MIU.UP(T)       = LIMMIU;
     M.MIU.bounds = (0, M.LIMMIU)
 #   PARTFRACT("1")= 0.25372;
-#   M.PARTFRACT.initialize = 0.25372
+#See above in PARTFRACT Param definition
 
 #   * First period predetermined by Kyoto Protocol
 #   MIU.FX("1")     = 0.005;
@@ -513,7 +526,7 @@ def createDICE2007(name='DICE2007', LIMMIU=1, FOSSLIM=6000):
     M.KK = Constraint(M.T, rule = KK_rule, doc = 'Capital balance equation with special initial conditions')
 
     def KC_rule(M,t):
-        if t == M.L0.value:
+        if t == value(M.L0):
             return (0.02*M.K[t] <= M.I[t])
         else:
             return Constraint.Skip
@@ -585,7 +598,7 @@ def createDICE2007(name='DICE2007', LIMMIU=1, FOSSLIM=6000):
         if t == 1:
             return (M.TOCEAN[t] == M.TOCEAN0)
         else:
-            return (M.TOCEAN[t] == M.TOCEAN[t] + M.C4*(M.TATM[t]-M.TOCEAN[t]))
+            return (M.TOCEAN[t] == M.TOCEAN[t-1] + M.C4*(M.TATM[t-1]-M.TOCEAN[t-1]))
     M.TOCEANEQ = Constraint(M.T, rule = TOCEANEQ_rule, doc = 'Temperature-climate equation for lower oceans')
 
 #   YGROSSEQ(T)..   YGROSS(T) =e= AL(T)*L(T)**(1-GAMA)*K(T)**GAMA;
@@ -646,6 +659,6 @@ def createDICE2007(name='DICE2007', LIMMIU=1, FOSSLIM=6000):
 #   UTIL..          UTILITY =E= SUM(T, 10 *RR(T)*L(T)*(PERIODU(T))/scale1)+ scale2 ;
     def UTIL_rule(M):
         return (sum(10*M.RR[t]*M.L[t]*M.PERIODU[t]/M.SCALE1 for t in M.T) + M.SCALE2)
-    M.UTIL = Objective(rule = UTIL_rule, sense = maximize, doc = 'Objective function')
+    M.UTIL = Objective(rule = UTIL_rule, sense = maximize, doc = 'Objective function: total discounted utility')
 
     return M
