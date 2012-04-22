@@ -65,11 +65,11 @@ def createDICE2007(name='DICE2007', LIMMIU=1.0, FOSSLIM=6000.0):
 
     To create an abstract optimization model of DICE2007  call:
 
-    createDICE2007(name, LIMMIU, FOSSLIM)
+    createDICE2007(name=NAME, LIMMIU=value, FOSSLIM=value)
 
-    where name can be any string (used a short description of the model),
-    LIMMIU is the upper limit on the fraction of CO2 emission under abatement,
-    and FOSSLIM is the maximum cumulative extraction of fossil fuels (in GtC).
+    where NAME can be any string (used a short description of the model), the
+    LIMMIU value is the upper limit on the fraction of CO2 emission under abatement,
+    and the FOSSLIM value is the maximum cumulative extraction of fossil fuels (in GtC).
     The default values are:
 
     name='DICE2007 Optimal'
