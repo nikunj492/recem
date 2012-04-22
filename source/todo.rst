@@ -15,7 +15,7 @@ the recem.dice package in a python program::
     from recem.dice import createDICE1993, createDICE2007
 
     dice1 = createDICE1993(name='dice', BASE=0.0)
-    dice2 = createDICE2007(name='anotherdice',)
+    dice2 = createDICE2007(name='anotherdice', LIMMIU=1.0, FOSSLIM=6000)
 
 The python scripts **runDICE1993.py** and **runDICE2007.py** provide example
 programs for their use.

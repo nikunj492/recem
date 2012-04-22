@@ -59,8 +59,8 @@ the recem.dice package in a python program:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">coopr.pyomo</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">recem.dice</span> <span class="kn">import</span> <span class="n">createDICE1993</span><span class="p">,</span> <span class="n">createDICE2007</span>
 
-<span class="n">dice1</span> <span class="o">=</span> <span class="n">createDICE1993</span><span class="p">()</span>
-<span class="n">dice2</span> <span class="o">=</span> <span class="n">createDICE2007</span><span class="p">()</span>
+<span class="n">dice1</span> <span class="o">=</span> <span class="n">createDICE1993</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;dice&#39;</span><span class="p">,</span> <span class="n">BASE</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+<span class="n">dice2</span> <span class="o">=</span> <span class="n">createDICE2007</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;anotherdice&#39;</span><span class="p">,</span> <span class="n">LIMMIU</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">FOSSLIM</span><span class="o">=</span><span class="mi">6000</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The python scripts <strong>runDICE1993.py</strong> and <strong>runDICE2007.py</strong> provide example
