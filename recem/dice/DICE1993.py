@@ -43,7 +43,7 @@
 
 from coopr.pyomo import *
 
-def createDICE1993(name='DICE1993'):
+def createDICE1993(name='DICE1993', BASE=1.0):
     """
      This version of DICE1993 is from 'The Environmental Economics
      and Natural Resources Group' of Wageningen University
@@ -56,16 +56,23 @@ def createDICE1993(name='DICE1993'):
 
     To create an abstract optimization model of DICE1993  call:
 
-    createDICE1993(name)
+    createDICE1993(name=NAME,BASE=value)
 
-    where name can be any string and is used to give the model a short
-    description. The default value is:
+    where NAME can be any string and is used to give the model a short
+    description. The default value is name='DICE1993'.
 
-    name='DICE1993'
+    BASE=value controls whether TECOSTS [Damage from temperature rise] is set to
+    zero or not.
+    value=0.0 [no damages], value=1.0 [damages], default is 1.0
+
     """
 
     dice = AbstractModel()
     dice.name = name
+    if BASE==0.0 or BASE==1.0:
+        pass
+    else:
+        raise ValueError("BASE should be 0.0 [no temp. damages] or 1.0 [include damages].")
 
 #    SETS
 #    T               time periods                                    /1*60/
@@ -110,7 +117,7 @@ def createDICE1993(name='DICE1993'):
 #    PHIM            transversality coefficient carbon ($ per ton)   /-9/
 #    PHITE           transversality coeff temp (billion $ per dC)    /-7000/
 
-    dice.BASE = Param(initialize=1.0, doc='dummy for base scenario')
+    dice.BASE = Param(initialize=BASE, doc='dummy for base scenario')
     dice.R = Param(initialize=0.03, doc='rate of social time preference per year')
     dice.GL0 = Param(initialize=0.223, doc='growth rate of population per year')
     dice.DLAB = Param(initialize=0.195, doc=' decline rate of population growth per decade')
@@ -264,8 +271,8 @@ def createDICE1993(name='DICE1993'):
     dice.I = Var(dice.T, within=NonNegativeReals, bounds = (0.0, None), initialize = 1.0, doc="investment trillion US dollar")
     dice.S = Var(dice.T, initialize = 0.1, doc="savings rate fraction GDP")
     dice.TRANS = Var(doc="transversality variable last period")
-    dice.ABCOSTS = Var(dice.T, doc="tangible relative costs related to abatement")
-    dice.TECOSTS = Var(dice.T, doc="tangible relative costs related to temp rise")
+    dice.ABCOSTS = Var(dice.T, initialize=0.0, doc="tangible relative costs related to abatement")
+    dice.TECOSTS = Var(dice.T, initialize=0.0, doc="tangible relative costs related to temp rise")
     dice.Y = Var(dice.T, initialize = 20.0, within=NonNegativeReals, bounds = (0.0, None), doc="output")
     dice.UTILPC = Var(dice.T, doc="utility per capita")
 
@@ -326,7 +333,7 @@ def createDICE1993(name='DICE1993'):
 #    EE(T)..      E(T)      =G= 10*SIGMA(T)*(1-MIU(T))*AL(T)*L(T)**(1-GAMA)
 #                               *K(T)**GAMA;
     def EE_define(dice, t):
-        return (dice.E[t] >= 10.0 * dice.SIGMA[t] * (1 - dice.MIU[t]) \
+        return (dice.E[t] == 10.0 * dice.SIGMA[t] * (1 - dice.MIU[t]) \
                 * dice.AL[t] * dice.L[t] ** (1 - dice.GAMA) * dice.K[t] ** dice.GAMA)
     dice.EE = Constraint(dice.T, rule = EE_define, doc="emissions  process")
 

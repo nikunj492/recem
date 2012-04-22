@@ -38,7 +38,6 @@ tee = False
 
 solver_manager = SolverManagerFactory('serial')
 
-dice = createDICE1993()
 
 #    * Note that there is no equation to determine the optimal value of MIU(T).
 #    * This variable is determined endogenously by GAMS as a 'free variable'.
@@ -58,8 +57,10 @@ dice = createDICE1993()
 #
 #    SOLVE DICE MAXIMIZING UTILITY USING NLP;
 
+dice = createDICE1993(BASE=0.0)
+# NOTE: We pass the BASE dummy when we call createDICE1993 for the BASE scenario.
+
 dice.MIU.bounds = (0.0,0.0)   # fix by setting upper and lower bounds to 0.
-dice.BASE.set_value(0.0)
 
 print '[%8.2f] Create model BASE SCENARIO\n' %(time.time()-start_time)
 
@@ -95,8 +96,12 @@ print ""
 #
 #    SOLVE DICE MAXIMIZING UTILITY USING NLP;
 
-dice.MIU.bounds = (0.0,0.0)   # fix by setting upper and lower bounds to 0.
-dice.BASE.set_value(1.0)
+dice = createDICE1993(BASE=1.0)
+# We pass BASE=1.0 to createDICE1993 for the next 3 scenarios. We create the
+# dice AbstractModel only once here  and change some bounds and constraints in the
+# subsequent cases.
+
+dice.MIU.bounds = (0.0, 0.0)   # fix by setting upper and lower bounds to 0.
 
 print '[%8.2f] Create model MARKET SCENARIO\n' %(time.time()-start_time)
 dice.doc = """
@@ -140,7 +145,8 @@ def FIXMIU_rule(dice, t):
     else:
         return Constraint.Skip
 dice.FIXMIU = Constraint(dice.T, rule = FIXMIU_rule)
-dice.BASE.set_value(1.0)
+# We fix dice.MIU[1], dice.MIU[2] and dice.MIU[3] to 0.00000001 by adding three
+# new constraints to the existing dice AbstractModel.
 
 print '[%8.2f] Create model OPT_CONT SCENARIO\n' %(time.time()-start_time)
 dice.doc= """
@@ -170,7 +176,6 @@ print ""
 #
 #    SOLVE DICE MAXIMIZING UTILITY USING NLP;
 
-dice.BASE.set_value(1.0)
 dice.M.bounds = (0.0, 1180)
 
 print '[%8.2f] Create model CONCENT SCENARIO\n' %(time.time()-start_time)
