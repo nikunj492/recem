@@ -19,7 +19,19 @@ the recem.dice package in a python program::
 
 The python scripts **runDICE1993.py** and **runDICE2007.py** provide example
  programs for their use.
+::
 
+    $ python runDICE1993.py
+
+will generate the file dice1993.txt, which contains the results of the runs of
+BASE, MARKET, OPT_CONT and CONCENT scenarios of DICE1993. The file is a csv file with
+'space' or [_] as the delimiter, any spreadsheet program should be able to open it.
+Similarly::
+
+    $ python runDICE2007.py
+
+will generate the file dice2007_optimum.txt, which contains the results for the
+OPTIMUM scenario of DICE2007.
 
 * MARKAL-TIMES type bottom-up model:
 
