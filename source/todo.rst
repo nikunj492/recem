@@ -14,8 +14,8 @@ the recem.dice package in a python program::
     from coopr.pyomo import *
     from recem.dice import createDICE1993, createDICE2007
 
-    dice1 = createDICE1993()
-    dice2 = createDICE2007()
+    dice1 = createDICE1993(name='dice', BASE=0.0)
+    dice2 = createDICE2007(name='anotherdice',)
 
 The python scripts **runDICE1993.py** and **runDICE2007.py** provide example
 programs for their use.
