@@ -13,80 +13,80 @@
 from coopr.pyomo import *
 
 
-def copy_PAST(model):
-    return model.PAST
+def copy_PAST(m):
+    return m.PAST
 
 
-def copy_HORIZON(model):
-    return model.HORIZON
+def copy_HORIZON(m):
+    return m.HORIZON
 
 
-def copy_TIME(model):
-    return model.TIME
+def copy_TIME(m):
+    return m.TIME
 
 
-def calculate_PERIOD(model, time):
-    pos = model.HORIZON.ord(time)
+def calculate_PERIOD(m, time):
+    pos = m.HORIZON.ord(time)
     if pos == 1:
         return 0
     else:
-        return (time - model.HORIZON[pos-1])
+        return (time - m.HORIZON[pos-1])
 
 
-def calculate_PERIODDISCOUNT(model, time):
+def calculate_PERIODDISCOUNT(m, time):
 
-    init = model.HORIZON.first()
+    init = m.HORIZON.first()
     years = time - init
-    return ((1 - value(model.DISCOUNTRATE)) ** years)
+    return ((1 - value(m.DISCOUNTRATE)) ** years)
 
 
-def build_basic_model_utility(model):
+def build_basic_model_utility(m):
 
 # SETS and PARAMETERS [that have to do with time]
 
-    model.PAST              = Set(ordered=True, within=Integers)
-    model.HORIZON           = Set(ordered=True, within=Integers)
-#        model.DATATIME     = Set(ordered=True, within=Integers)
-    model.TIME              = model.PAST | model.HORIZON
-    model.SEASON            = Set()
-    model.TIMESLICE         = Set()
-    model.TIMESLICESHARE    = Param(model.SEASON, model.TIMESLICE)
-    model.PERIOD            = Param(model.HORIZON, rule=calculate_PERIOD)
+    m.PAST              = Set(ordered=True, within=Integers)
+    m.HORIZON           = Set(ordered=True, within=Integers)
+#        m.DATATIME     = Set(ordered=True, within=Integers)
+    m.TIME              = m.PAST | m.HORIZON
+    m.SEASON            = Set()
+    m.TIMESLICE         = Set()
+    m.TIMESLICESHARE    = Param(m.SEASON, m.TIMESLICE)
+    m.PERIOD            = Param(m.HORIZON, rule=calculate_PERIOD)
 
-# NOTE: In Python, B = A for complex objects [like model.PAST] only makes B
+# NOTE: In Python, B = A for complex objects [like m.PAST] only makes B
 # refer to the A but does not make a copy of A. If we want a copy
 # we have to create a new object B and copy the data of A. That is what we do
 # in the next few lines. Functions copy_PAST, copy_FUTURE etc are defined in
-# this module [recem.energymodel.utility_functions]
+# this module [recem.energym.utility_functions]
 
-    model.VINTAGEPAST    = Set(ordered=True, initialize=copy_PAST)
-    model.VINTAGEHORIZON = Set(ordered=True, initialize=copy_HORIZON)
-    model.VINTAGETIME    = Set(ordered=True, initialize=copy_TIME)
+    m.VINTAGEPAST    = Set(ordered=True, initialize=copy_PAST)
+    m.VINTAGEHORIZON = Set(ordered=True, initialize=copy_HORIZON)
+    m.VINTAGETIME    = Set(ordered=True, initialize=copy_TIME)
 
 # SETS [that have to do with demands, technology processes to meet these
 #       demands, and the commodites that flow in and (flow) out of these
 #       processes. We also list commodity imports and exports here. CO2 is
 #       also a 'commodity' produced by technology processes!]
 
-    model.DEMANDTYPES   = Set()
-    model.TECH          = Set()
-    model.BASELOAD      = Set(within=model.TECH)
-    model.PEAKING       = Set(within=model.TECH)
-    model.COMMODITY     = Set()
-    model.GHG           = Set(within=model.COMMODITY, initialize=['CO2'])
-    model.FLOW_IN       = Set(model.TECH,within=model.COMMODITY)
-    model.FLOW_OUT      = Set(model.TECH,within=model.COMMODITY)
-#    model.FLOW          = model.FLOW_IN.union(model.FLOW_OUT)
-    model.IMPORT        = Set(model.COMMODITY)
-    model.EXPORT        = Set(model.COMMODITY)
+    m.DEMANDTYPES   = Set()
+    m.TECH          = Set()
+    m.BASELOAD      = Set(within=m.TECH)
+    m.PEAKING       = Set(within=m.TECH)
+    m.COMMODITY     = Set()
+    m.GHG           = Set(within=m.COMMODITY, initialize=['CO2'])
+    m.FLOW_IN       = Set(m.TECH,within=m.COMMODITY)
+    m.FLOW_OUT      = Set(m.TECH,within=m.COMMODITY)
+#    m.FLOW          = m.FLOW_IN.union(m.FLOW_OUT)
+    m.IMPORT        = Set(m.COMMODITY)
+    m.EXPORT        = Set(m.COMMODITY)
 
 # PARAMETERS [discount rate: annual and for the length of individual periods]
 
-    model.DISCOUNTRATE   = Param()
-    model.PERIODDISCOUNT = Param(model.HORIZON, rule=calculate_PERIODDISCOUNT)
+    m.DISCOUNTRATE   = Param()
+    m.PERIODDISCOUNT = Param(m.HORIZON, rule=calculate_PERIODDISCOUNT)
 
 # PARAMETERS [demand, technoogy and flow related]
 
-#    model.CURRENTCAPACITY   = Param(model.TECH, model.VINTAGEPAST)
-#    model.EFFICIENCY        = \
-#        Param(model.FLOW_IN, model.TECH, model.VINTAGEPAST, model.FLOW_OUT)
+#    m.CURRENTCAPACITY   = Param(m.TECH, m.VINTAGEPAST)
+#    m.EFFICIENCY        = \
+#        Param(m.FLOW_IN, m.TECH, m.VINTAGEPAST, m.FLOW_OUT)

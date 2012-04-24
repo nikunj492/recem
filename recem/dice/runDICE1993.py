@@ -137,17 +137,6 @@ print ""
 #    MIU.FX('1') = 0;        MIU.FX('2') = 0;        MIU.FX('3') = 0;
 #
 #    SOLVE DICE MAXIMIZING UTILITY USING NLP;
-
-dice.MIU.bounds = (0.0,0.9999)
-def FIXMIU_rule(dice, t):
-    if 1<= t <= 3:
-        return (0.00000001, dice.MIU[t], 0.00000001) #return a tuple with equal up, lo values to fix vars.
-    else:
-        return Constraint.Skip
-dice.FIXMIU = Constraint(dice.T, rule = FIXMIU_rule)
-# We fix dice.MIU[1], dice.MIU[2] and dice.MIU[3] to 0.00000001 by adding three
-# new constraints to the existing dice AbstractModel.
-
 print '[%8.2f] Create model OPT_CONT SCENARIO\n' %(time.time()-start_time)
 dice.doc= """
     OPT_CONT SCENARIO
@@ -157,7 +146,32 @@ dice.doc= """
     """
 
 print dice.doc
-inst = dice.create()
+
+dice.MIU.bounds = (0.0,0.9999)
+####
+#def FIXMIU_rule(dice, t):
+#    if 1<= t <= 3:
+#        return (0.00000001, dice.MIU[t], 0.00000001) #return a tuple with equal up, lo values to fix vars.
+#    else:
+#        return Constraint.Skip
+#dice.FIXMIU = Constraint(dice.T, rule = FIXMIU_rule)
+#inst = dice.create()
+#We fix dice.MIU[1], dice.MIU[2] and dice.MIU[3] to 0.00000001 by adding three
+#new constraints to the existing dice AbstractModel.
+#
+##OPTION 2 :create the instance file, then set lower/upper bounds to dice.MIU[1]....
+##you have to create the instance file first, otherwise you'll get an error
+##dice.MIU[1] will give an error as MIU is declared over an abstract set which
+##is filled only after the instance is created.
+#
+#inst = dice.create()
+#inst.MIU[1].setlb(0.0000001)
+#inst.MIU[1].setub(0.0000001)
+#inst.MIU[2].setlb(0.0000001)
+#inst.MIU[2].setub(0.0000001)
+#inst.MIU[3].setlb(0.0000001)
+#inst.MIU[3].setub(0.0000001)
+
 print '[%8.2f] Created instance\n' %(time.time()-start_time)
 results = solver_manager.solve(inst, opt=opt, tee=tee, options=options, suffixes=['dual','rc'])
 print '[%8.2f] Solved instance\n' %((time.time()-start_time))
