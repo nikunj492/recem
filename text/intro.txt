@@ -1,0 +1,45 @@
+
+Project Design and Development Tools
+************************************
+
+This project was designed to conceptualize and make concrete the
+criteria introduced in the *Motivation*. We have chosen the hosting
+platform GitHub as it is free [for open and public projects], reliable
+and  make open source collaboration extremely easy. **GitHub** uses
+**git**, a fast and efficient version control system, to make
+collaboration easy and painless. Anybody can start working on a public
+project by making a copy [called forking] thereby making
+collaborations easy to start.
+
+The project development will be primarily in Python. Python is open
+source, easy to learn, and comes with a lot of useful software
+libraries, plotting software etc. It has become the language of
+scientific computing with large number of projects based on it.
+
+The energy-climate-economics models are usually a class of problems in
+mathematical optimization and operations research. The models can be
+written in terse mathematical notation but the specialized programs
+[**Solvers**] that can solve these problems can only handle simple but
+large data structures. There is therefore a middle layer - a special
+**mathematical programming language** - required to translate between
+human and computer. Other software are required to handle data and
+process and plot results.
+
+The most important consideration in the choice of Python has been the
+considerable progress in the development of an open source
+mathematical programming language, Pyomo, which is based on Python.
+Pyomo and a large number of open source optimization  software
+packages are being developed under the project Coopr (A COmmon
+Optimization Python Repository) at Sandia National Laboratories.
+
+There has also been a decade long initiative in the mathematical
+programming and operations research  community to develop open source
+solvers and other optimization tools. These software have been
+developed under the COIN-OR (COmputational INfrastructure for
+Operations Research) project. There are a large number of these open
+source solvers that are extremely good, and we will use them in our
+project.
+
+The development of open source policy models would not be possible
+without the development and success of the open source software
+movement.
