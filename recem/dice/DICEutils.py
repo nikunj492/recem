@@ -78,7 +78,8 @@ def DICE_results_writer(results, instance, file=None, mode='w', startyear=None):
         print >> fp, "Constraint", c, '\"',cobject.doc,'\"'
         print >> fp, 'PERIOD  ', c, 'LOWER', 'VALUE', 'UPPER', 'DUAL'
     # Special condition for singleton Constraint (TRANSE) which has no index
-        if type(cobject.index()) is dict and cobject.index().keys()[0] is None:
+#        if type(cobject.index()) is dict and cobject.index().keys()[0] is None:
+        if cobject.index is None:
             print >> fp, "-", cobject.name,\
             cobject[None].lower is None and '-INF' or cobject[None].lower(),\
             cobject[None].body(), \
