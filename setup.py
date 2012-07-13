@@ -19,11 +19,11 @@ def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 
-setup(name='Recem',
+setup(name='recem',
       version='0.1alpha',
       maintainer='Shoibal Chakravarty',
       maintainer_email='shoibalc@gmail.com',
-      url = 'http://shoibalc.github.com/Recem/',
+      url = 'http://shoibalc.github.com/recem/',
       license = 'BSD',
       platforms = ["any"],
       packages = ['recem'],

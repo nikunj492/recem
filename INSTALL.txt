@@ -26,7 +26,7 @@ Installation Prerequisites
       We recommend that you use Options 2-4 (3 for Windows). Options
       2-4 set up a virtual Python environment which is a local and isolated
       Python environment that mimics a complete Python installation. We will
-      install Recem in this virtual Python environment. The virtual Python
+      install recem in this virtual Python environment. The virtual Python
       environment comes with setuptools and pip - two very handy programs to
       install and manage other Python packages.
 
@@ -41,19 +41,19 @@ Installation Prerequisites
       solvers are on your PATH (your operation system should know where to
       find them!).
 
-Install Recem
+Install recem
 --------------
 We will install using the Python of the virtual Python installation of Coopr.
 Assume that the Python executable of the virtual environment is
 /path/to/coopr/bin/python.
 
 Your's might be different. We assume that you have unzipped and saved the
-Recem zip file in the directory Recem. In this directory, type the following
+recem zip file in the directory recem. In this directory, type the following
 commands::
 
      /path/to/coopr/bin/python setup.py develop
 
-This will install a 'development' version of Recem. You can make changes,
+This will install a 'development' version of recem. You can make changes,
 uninstall Recem using::
 
      /path/to/coopr/bin/python setup.py develop --uninstall
