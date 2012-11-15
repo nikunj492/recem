@@ -1,7 +1,7 @@
 .. Recem documentation master file, created by
-   sphinx-quickstart on Thu Apr 12 03:34:36 2012.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+    sphinx-quickstart on Thu Apr 12 03:34:36 2012.
+    You can adapt this file completely to your liking, but it should at least
+    contain the root `toctree` directive.
 
 ###########################################################
 Recem: Repository of Energy, Climate, and Economics Models
@@ -52,6 +52,7 @@ Contents
     intro
     getting_started
     todo
+    c1
 
 ==================
 Status and License

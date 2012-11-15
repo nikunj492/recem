@@ -28,9 +28,18 @@
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="Recem 0.1alpha documentation" href="index.html" />
     <link rel="next" title="Project Contents" href="todo.html" />
-    <link rel="prev" title="Project Design and Development Tools" href="intro.html" /> 
+    <link rel="prev" title="Project Design and Development Tools" href="intro.html" />
+    <script type="text/javascript" src="http://aleph.sagemath.org/static/jquery.min.js"></script>
+    <script type="text/javascript" src="http://aleph.sagemath.org/embedded_sagecell.js"></script>
+    <style type="text/css">.sagecell_output th, .sagecell_output td {border: none;}</style>
+
   </head>
   <body>
+<div class="header">
+<a rel="home" href="file:///home/shoibalc/Devel/mystuff/shoibalc/recem/index.html">
+<img alt="RECEM" style="border-width:5" src="_static/recem_logo.png" />
+</a><br />
+</div>
     <div class="related">
       <h3>Navigation</h3>
       <ul>
@@ -63,8 +72,7 @@ some work to get it to run on Windows or Mac OS X.</p>
 </div>
 <div class="section" id="installation-prerequisites">
 <h2>Installation Prerequisites<a class="headerlink" href="#installation-prerequisites" title="Permalink to this headline">¶</a></h2>
-<ul>
-<li><p class="first"><strong>Python 2.7</strong>:</p>
+<p><strong>Python 2.7</strong>:</p>
 <p>Linux:
 <a class="reference external" href="http://www.python.org/">Python</a> is an open source,  high level interpreted
 language that is very intuitive to learn and easy to program in. Python
@@ -82,22 +90,19 @@ Fedora or RedHat.</p>
 <p>Windows:
 Install Python from this website:</p>
 <blockquote>
-<div><p><a class="reference external" href="http://www.python.org/getit/windows/">http://www.python.org/getit/windows/</a></p>
-</div></blockquote>
+<div><a class="reference external" href="http://www.python.org/download/">http://www.python.org/download/</a></div></blockquote>
+<p>We recommend <a class="reference external" href="http://www.pythonxy.com/">pythonxy</a> and <a class="reference external" href="http://code.google.com/p/winpython/">winpython</a>.</p>
 <p>Macs:
-Macs come pre-installed with Python but the versions might be old.
-Install version 2.7 from this website:</p>
+Macs come pre-installed with Python but the versions might be old and the libraries non-standard.
+If the installed version does not work try to install version 2.7 from this website:</p>
 <blockquote>
-<div><p><a class="reference external" href="http://www.python.org/getit/mac/">http://www.python.org/getit/mac/</a></p>
-</div></blockquote>
-</li>
-<li><p class="first"><strong>Coopr</strong>:</p>
+<div><a class="reference external" href="http://www.python.org/download/">http://www.python.org/download/</a></div></blockquote>
+<p><strong>Coopr</strong>:</p>
 <p>Coopr is A COmmon Optimization Python Repository - a collection of
 open source optimization packages in Python. Install Coopr from this
 website:</p>
 <blockquote>
-<div><p><a class="reference external" href="https://software.sandia.gov/trac/coopr/wiki/GettingStarted">https://software.sandia.gov/trac/coopr/wiki/GettingStarted</a></p>
-</div></blockquote>
+<div><a class="reference external" href="https://software.sandia.gov/trac/coopr/wiki/GettingStarted">https://software.sandia.gov/trac/coopr/wiki/GettingStarted</a></div></blockquote>
 <p>We recommend that you use Options 2-4 (3 for Windows). Options
 2-4 set up a virtual Python environment which is a local and isolated
 Python environment that mimics a complete Python installation. See</p>
@@ -107,21 +112,17 @@ install Recem in this virtual Python environment. The virtual Python
 environment comes with setuptools [<a class="reference external" href="http://pypi.python.org/pypi/setuptools">http://pypi.python.org/pypi/setuptools</a>]
 and pip [<a class="reference external" href="http://www.pip-installer.org">http://www.pip-installer.org</a>] - two very handy programs to
 install and manage other Python packages.</p>
-</li>
-<li><p class="first"><strong>COIN-OR Solvers</strong>:</p>
+<p><strong>COIN-OR Solvers</strong>:</p>
 <p>COIN-OR is COmputational INfrastructure for Operations
 Research - an initiative to promote the development of open source
 software in operations research. We will use the solvers of COIN-OR.
 Install the solver executables from this website:</p>
 <blockquote>
-<div><p><a class="reference external" href="http://www.coin-or.org/projects/CoinBinary.xml">http://www.coin-or.org/projects/CoinBinary.xml</a></p>
-</div></blockquote>
+<div><a class="reference external" href="http://www.coin-or.org/projects/CoinBinary.xml">http://www.coin-or.org/projects/CoinBinary.xml</a></div></blockquote>
 <p>You should obtain the appropriate executables from the &#8216;Download Binaries&#8217;
 link. Follow instruction their Installation help files to make sure that
 solvers are on your PATH (your operation system should know where to
 find them!). We will the solver <a class="reference external" href="www.coin-or.org/Ipopt">Ipopt</a> for DICE.</p>
-</li>
-</ul>
 </div>
 <div class="section" id="install-recem">
 <h2>Install Recem<a class="headerlink" href="#install-recem" title="Permalink to this headline">¶</a></h2>
@@ -164,7 +165,7 @@ reference.</p>
 <div class="highlight-python"><pre>$ git clone git@github.com:shoibalc/Recem.git Recem</pre>
 </div>
 <p>The rest of the installation process is the same as the installation from the
-zip file</p>
+zip file.</p>
 </div>
 </div>
 
@@ -230,25 +231,24 @@ zip file</p>
       </ul>
     </div>
 <div class="footer">
-<!-- We'll go with CC BY -->
 <!-- CC BY -->
-<a rel="license" href="http://creativecommons.org/licenses/by/3.0/">
+<!-- a rel="license" href="http://creativecommons.org/licenses/by/3.0/">
 <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" />
 </a><br />
 The documentation on this website is licensed under the <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">
 Creative Commons Attribution 3.0 Unported License</a>.
 All source code is licensed under the
 <a rel="license" href="http://www.opensource.org/licenses/BSD-3-Clause">
-BSD License. </a>
+BSD License. </a -->
 <!-- CC BY SA -->
-<!-- a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">
 <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-sa/3.0/88x31.png" />
 </a><br />
 The documentation on this website is licensed under the <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">
 Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.
 All source code is licensed under the
 <a rel="license" href="http://www.opensource.org/licenses/BSD-3-Clause">
-BSD License. </a -->
+BSD License. </a>
 </div>
   </body>
 </html>
