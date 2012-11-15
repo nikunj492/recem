@@ -17,13 +17,14 @@ Math
 Interact
 --------
 
-   .. sagecell::
+    .. sagecell::
 
-   1+1
-   print "hello world"
+       1+1
+       print "hello world"
    
-    # by Nick Alexander (based on the work of Marshall Hampton)
 
+
+    .. # by Nick Alexander (based on the work of Marshall Hampton)
     .. var('x')
     .. @interact
     .. def midpoint(f = input_box(default = sin(x^2) + 2, type = SR),
